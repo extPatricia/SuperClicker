@@ -2,11 +2,13 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 
 public class SlotButtonUI : MonoBehaviour
 {
 	#region Properties
-	[field: SerializeField] public int ClicksLeft { 
+	[field: SerializeField] public Reward Reward;
+	public int ClicksLeft { 
 		get 
 		{ 
 			return _clicksLeft;
@@ -14,24 +16,34 @@ public class SlotButtonUI : MonoBehaviour
 		set 
 		{
 			_clicksLeft = value;
+			// Reward time
 			if (_clicksLeft <= 0)
 			{
-				Reward();
+				// Reward event
+				OnSlotReward?.Invoke(Reward);
 				//TODO: Hacer que cada objeto cueste un 15% mas de clicks que el anterior
 				_initialStock--;
 				if (_initialStock > 0)
 				{
 					_clicksLeft = _initialClicks;
+					// almacenar el ultimo valor guardado e ir incrementado los initial clicks en un 15%
+					
+
 				}
 				else
 				{
-					Destroy(gameObject);
+					GetComponent<Image>().enabled = false;
+					_clickButton.interactable = false;
+					_clickText.enabled = false;
 				}
 				RefreshClicksText();
 			}
 		} 
 	}
-	public event Action OnSlotClicked;
+
+	// Only one event for all slots
+	public static event Action<Reward> OnSlotReward;
+	public static event Action<SlotButtonUI> OnSlotClicked;
 	#endregion
 
 	#region Fields
@@ -39,6 +51,7 @@ public class SlotButtonUI : MonoBehaviour
 	[SerializeField] private Button _clickButton;
 	[SerializeField] private TextMeshProUGUI _clickText;
 	[SerializeField] private ParticleSystem _particles;
+	[SerializeField] private int _materialParticleIndex;
 	[Header("Prefab points")]
 	[SerializeField] private PointsElementUI _prefabPoint;
 	[SerializeField] private int _initialClicks = 10;
@@ -53,45 +66,64 @@ public class SlotButtonUI : MonoBehaviour
 	private void Awake()
 	{
 		_gameController = FindObjectOfType<GameController>();
+		Reward.ObjectReward = this;
 	}
 	// Start is called before the first frame update
 	void Start()
     {
-		ClicksLeft = _initialClicks;
-		int clickRatio = Mathf.RoundToInt(_gameController.ClickRatio);
-		_clickButton.onClick.AddListener(() => Click(clickRatio));
-    }
+		Initialize();
 
+		_clickButton.onClick.AddListener(Click);
+		//_clickButton.onClick.AddListener(() =>
+		//{
+		//	int clickRatio = Mathf.RoundToInt(_gameController.ClickRatio);
+		//	Click(clickRatio);
+		//});
 
-	// Update is called once per frame
-	void Update()
-    {
-        
-    }
+		RefreshClicksText();
+	}
 	#endregion
 
 	#region Public Methods
-	public void Click(int clickCount)
+	public void Click(int clickCount, bool agent = false)
 	{
-		_particles.Emit(clickCount);
+		_particles.startSpeed = Mathf.Clamp(clickCount/2, 1, 30);
+		_particles.Emit(Mathf.Clamp(clickCount, 1, 15));
 		ClicksLeft -= clickCount;
 		RefreshClicksText();
-		Instantiate(_prefabPoint, transform);
+		Camera.main.DOShakePosition(Mathf.Clamp(0.1f * clickCount, 0, 2));
+		
+		if (!agent)
+		{
+			Instantiate(_prefabPoint, transform);
+			_gameController.RainParticles();
+		}
 	}
 
-	private void RefreshClicksText()
-	{
-		_clickText.text = ClicksLeft.ToString();
-	}
-
-	private void Reward()
-	{
-
-	}
 
 	#endregion
 
 	#region Private Methods
+	private void Initialize()
+	{
+		ClicksLeft = _initialClicks;
+
+		// Particle frame
+		float segment = 1f / 28f;
+		float frame = segment * _materialParticleIndex;
+		var texture = _particles.textureSheetAnimation;
+		texture.startFrame = frame;
+	}
+	private void RefreshClicksText()
+	{
+		_clickText.text = ClicksLeft.ToString();
+	}
+	private void Click()
+	{
+		OnSlotClicked?.Invoke(this);
+		int clickRatio = Mathf.RoundToInt(_gameController.ClickRatio);
+		Click(clickRatio);
+	}
 	#endregion
 
 }
