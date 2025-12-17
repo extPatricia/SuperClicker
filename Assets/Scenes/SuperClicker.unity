@@ -7092,7 +7092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5729784421201066279, guid: 4281cd4a485456341b9dfa31ecdf90cb, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6961597102998995889, guid: 4281cd4a485456341b9dfa31ecdf90cb, type: 3}
       propertyPath: m_Name
