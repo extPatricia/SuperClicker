@@ -87,7 +87,6 @@ public class SlotButtonUI : MonoBehaviour
 	#region Public Methods
 	public void Click(int clickCount, bool agent = false)
 	{
-		_particles.startSpeed = Mathf.Clamp(clickCount/2, 1, 30);
 		_particles.Emit(Mathf.Clamp(clickCount, 1, 15));
 		ClicksLeft -= clickCount;
 		RefreshClicksText();

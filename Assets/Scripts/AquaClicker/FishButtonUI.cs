@@ -19,12 +19,15 @@ public class FishButtonUI : MonoBehaviour
 			_clicksLeft = value;
 		}
 	}
+
+	public static event Action<Reward> OnSlotReward;
 	#endregion
 
 	#region Fields
 	[Header("UI")]
 	[SerializeField] private Button _clickButton;
 	[SerializeField] private ParticleSystem _particles;
+	[SerializeField] private Sprite[] _particleSprites; 
 	[SerializeField] private TextMeshProUGUI _clickText;
 	[Header("Prefab Points")]
 	[SerializeField] private PointsUI _prefabPoint;
@@ -44,8 +47,6 @@ public class FishButtonUI : MonoBehaviour
 		Inizialite();
 
 		_clickButton.onClick.AddListener(Click);
-
-		RefreshClicksText();
 	}
 	#endregion
 
@@ -57,8 +58,7 @@ public class FishButtonUI : MonoBehaviour
 		Camera.main.DOShakePosition(Mathf.Clamp(0.1f * clickCount, 0, 2));
 
 		// Update Aqua Clicks
-		_aquaController.AddClicks(clickCount);
-		RefreshClicksText();
+		int finalClicks = _aquaController.AddClicks(clickCount);
 
 		// Instantiate points UI
 		PointsUI point = Instantiate(_prefabPoint, transform);
@@ -72,6 +72,7 @@ public class FishButtonUI : MonoBehaviour
 		);
 
 		pointRect.anchoredPosition = randomPos;
+		point.SetText("+" + finalClicks.ToString());
 
 		_aquaController.RainParticles();
 
@@ -94,11 +95,31 @@ public class FishButtonUI : MonoBehaviour
 		int clickRatio = Mathf.RoundToInt(_aquaController.ClickRatio);
 		Click(clickRatio);
 	}
-	private void RefreshClicksText()
+	private void RefreshClicksText(int totalClicks)
 	{
-		_clickText.text = _aquaController.TotalClicks.ToString() + " fishes!";
+		_clickText.text = totalClicks + " fishes!";
 	}
 
-	#endregion
+	private void OnEnable()
+	{
+		AquaController.OnClicksChanged += RefreshClicksText;
+		FishEvolution.OnEvolutionStageChanged += ChangeParticleSprite;
+	}
+
+	private void OnDisable() 
+	{
+		AquaController.OnClicksChanged -= RefreshClicksText;
+		FishEvolution.OnEvolutionStageChanged -= ChangeParticleSprite;
+	}
+	private void ChangeParticleSprite(int evolutionIndex)
+	{
+		var texture = _particles.textureSheetAnimation;
+		texture.enabled = true;
+		texture.mode = ParticleSystemAnimationMode.Sprites;
+
+		texture.RemoveSprite(0);
+		texture.AddSprite(_particleSprites[evolutionIndex]);
+	}
+	#endregion	
 
 }

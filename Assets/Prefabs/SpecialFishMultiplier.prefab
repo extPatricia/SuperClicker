@@ -53,8 +53,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <FishType>k__BackingField: 1
-  Value: 2000
-  Duration: 2
+  _clickButton: {fileID: 816400152148689074}
+  _value: 4
+  _duration: 60
+  _destroyYPosition: -70
+  _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}
+  _soundPoints: {fileID: 8300000, guid: 5c967dedc8eddc04facee6b9cb3a81d8, type: 3}
 --- !u!222 &8804512140064999643
 CanvasRenderer:
   m_ObjectHideFlags: 0
