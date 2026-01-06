@@ -9,7 +9,7 @@ public enum SpecialFishType
 {
 	Bonus,
 	Multiplier,
-	Frenzy
+	AutoAgent
 }
 public class SpecialFish : MonoBehaviour
 {
@@ -88,8 +88,8 @@ public class SpecialFish : MonoBehaviour
 			case SpecialFishType.Multiplier:
 				pointsUI.SetText("x" + _value.ToString());
 				break;
-			case SpecialFishType.Frenzy:
-				pointsUI.SetText("Frenzy!");
+			case SpecialFishType.AutoAgent:
+				pointsUI.SetText("Auto Agent +" + _value.ToString() + "!");
 				break;
 			default:
 				pointsUI.SetText(_value.ToString());
@@ -112,9 +112,9 @@ public class SpecialFish : MonoBehaviour
 				// Apply score multiplier
 				_aquaController.ActivateMultiplier(_value, _duration); 
 				break;
-			case SpecialFishType.Frenzy:
-				// Trigger frenzy mode
-				Debug.Log($"Frenzy Fish clicked! Activating frenzy mode for {_duration} seconds.");
+			case SpecialFishType.AutoAgent:
+				// Trigger auto agent mode
+				_aquaController.ActivateAutoClickerAgent(_value, _duration);
 				break;
 			default:
 				Debug.Log("Unknown Special Fish type.");

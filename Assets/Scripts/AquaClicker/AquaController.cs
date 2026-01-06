@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AquaController : MonoBehaviour
 {
@@ -11,10 +12,13 @@ public class AquaController : MonoBehaviour
 	[field: SerializeField] public float ClickRatio { get; set; }
 	[field: SerializeField] public float CurrentMultiplier { get; set; }
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
+	public bool IsAutoClickerActive => _autoAgentRoutine != null;
+
 	public int TotalClicks { get; set; }
 
 	public static Action<int> OnClicksChanged;
 	public static Action<float, float> OnMultiplierChanged;
+	public static Action<float> OnAutoAgentChanged;
 	#endregion
 
 	#region Fields
@@ -22,6 +26,11 @@ public class AquaController : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI _clickText;
 	[SerializeField] private TextMeshProUGUI _rewardText;
 	private Coroutine _multiplierRoutine;
+	private Coroutine _autoAgentRoutine;
+
+	[SerializeField] private AgentFishVisual _agentPrefab;
+	[SerializeField] private Transform _agentTransform;
+	private AgentFishVisual _agentVisual;
 
 	#endregion
 
@@ -56,6 +65,15 @@ public class AquaController : MonoBehaviour
 		_particleRain.Emit(Mathf.Clamp((int)ClickRatio, 0, 13));
 	}
 
+	/**
+	 *     .--.                    _        .-.     .--. _       .-.   
+	 *    : .--'                  :_;       : :    : .-':_;      : :   
+	 *    `. `. .---.  .--.  .--. .-. .--.  : :    : `; .-. .--. : `-. 
+	 *     _`, :: .; `' '_.''  ..': :' .; ; : :_   : :  : :`._-.': .. :
+	 *    `.__.': ._.'`.__.'`.__.':_;`.__,_;`.__;  :_;  :_;`.__.':_;:_;
+	 *          : :                                                    
+	 *          :_;                                                    
+	 */
 	public void ActivateMultiplier(float multiplier, float duration)
 	{
 		if (_multiplierRoutine != null)
@@ -63,6 +81,21 @@ public class AquaController : MonoBehaviour
 			StopCoroutine(_multiplierRoutine);
 		}
 		_multiplierRoutine = StartCoroutine(MultiplierTimer(multiplier, duration));
+	}
+	public void ActivateAutoClickerAgent(int clicksPerSecond, float duration)
+	{
+		if (_autoAgentRoutine != null)
+		{
+			StopCoroutine(_autoAgentRoutine);
+		}
+
+		if (_agentVisual == null)
+		{
+			_agentVisual = Instantiate(_agentPrefab);
+			_agentVisual.SetTarget(_agentTransform);
+		}
+		
+		_autoAgentRoutine = StartCoroutine(AutoClickerAgentTimer(clicksPerSecond, duration));
 	}
 	#endregion
 
@@ -83,16 +116,28 @@ public class AquaController : MonoBehaviour
 		OnMultiplierChanged?.Invoke(CurrentMultiplier, 0f);
 	}
 
-	/**
-	 *     .--.                    _        .-.     .--. _       .-.   
-	 *    : .--'                  :_;       : :    : .-':_;      : :   
-	 *    `. `. .---.  .--.  .--. .-. .--.  : :    : `; .-. .--. : `-. 
-	 *     _`, :: .; `' '_.''  ..': :' .; ; : :_   : :  : :`._-.': .. :
-	 *    `.__.': ._.'`.__.'`.__.':_;`.__,_;`.__;  :_;  :_;`.__.':_;:_;
-	 *          : :                                                    
-	 *          :_;                                                    
-	 */
 
+	private IEnumerator AutoClickerAgentTimer(int clicksPerSecond, float duration)
+	{
+		float timer = duration;
+
+		while (timer > 0)
+		{
+			AddClicks(clicksPerSecond);
+			OnAutoAgentChanged?.Invoke(timer);
+			timer -= 1f;
+			yield return new WaitForSeconds(1f);
+		}
+
+		if (_agentVisual != null)
+		{
+			Destroy(_agentVisual.gameObject);
+			_agentVisual = null;
+		}
+
+		OnAutoAgentChanged?.Invoke(0f);
+		_autoAgentRoutine = null;
+	}
 
 
 

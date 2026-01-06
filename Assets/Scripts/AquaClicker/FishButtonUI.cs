@@ -62,7 +62,7 @@ public class FishButtonUI : MonoBehaviour
 
 		// Instantiate points UI
 		PointsUI point = Instantiate(_prefabPoint, transform);
-
+		
 		RectTransform buttonRect = GetComponent<RectTransform>();
 		RectTransform pointRect = point.GetComponent<RectTransform>();
 
@@ -74,6 +74,7 @@ public class FishButtonUI : MonoBehaviour
 		pointRect.anchoredPosition = randomPos;
 		point.SetText("+" + finalClicks.ToString());
 
+		// Particle rain
 		_aquaController.RainParticles();
 
 	}

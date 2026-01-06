@@ -27,6 +27,13 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private int _multiplierSpawnedFish;
 	private float _lastMultiplierSpawnTime;
 
+	[Header("Fish Auto Agent")]
+	[SerializeField] private int _autoAgentMinClicks = 3000;
+	[SerializeField] private int _autoAgentMaxSpawns = 3;
+
+	private int _autoAgentSpawnedFish;
+	private float _lastAutoAgentSpawnTime;
+
 	private bool _specialFishOnScreen = false;
 	#endregion
 
@@ -41,6 +48,7 @@ public class SpecialFisherSpawner : MonoBehaviour
     {
 		TryBonusFish();
 		TryMultiplierFish();
+		TryAutoAgentFish();
     }
 
 	#endregion
@@ -67,13 +75,10 @@ public class SpecialFisherSpawner : MonoBehaviour
 	{
 		if (_specialFishOnScreen)
 			return;
-
 		if (AquaController.Instance.TotalClicks < _bonusMinClicks)
 			return;
-
 		if (_bonusSpawnedFish >= _bonusMaxSpawns)
 			return;
-
 		if (Time.time - _lastBonusSpawnTime < _duration)
 			return;
 
@@ -83,7 +88,6 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private void SpawnBonusFish()
 	{
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[0], _spawner.transform, false);
-
 		SpawnPosition(fishSpawn);
 
 		_bonusSpawnedFish++;
@@ -95,13 +99,10 @@ public class SpecialFisherSpawner : MonoBehaviour
 	{
 		if (AquaController.Instance.IsMultiplierActive)
 			return;
-
 		if (AquaController.Instance.TotalClicks < _multiplierMinClicks)
 			return;
-
 		if (_multiplierSpawnedFish >= _multiplierMaxSpawns)
 			return;
-
 		if (Time.time - _lastMultiplierSpawnTime < _duration)
 			return;
 
@@ -111,11 +112,34 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private void SpawnMultiplierFish()
 	{
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[1], _spawner.transform, false);
-
 		SpawnPosition(fishSpawn);
 
 		_multiplierSpawnedFish++;
 		_lastMultiplierSpawnTime = Time.time;
+		_specialFishOnScreen = true;
+	}
+
+	private void TryAutoAgentFish()
+	{
+		if (AquaController.Instance.IsAutoClickerActive)
+			return;
+		if (AquaController.Instance.TotalClicks < _autoAgentMinClicks)
+			return;
+		if (_autoAgentSpawnedFish >= _autoAgentMaxSpawns)
+			return;
+		if (Time.time - _lastAutoAgentSpawnTime < _duration)
+			return;
+
+		SpawnAutoAgentFish();
+	}
+
+	private void SpawnAutoAgentFish()
+	{
+		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[2], _spawner.transform, false);
+		SpawnPosition(fishSpawn);
+
+		_autoAgentSpawnedFish++;
+		_lastAutoAgentSpawnTime = Time.time;
 		_specialFishOnScreen = true;
 	}
 
