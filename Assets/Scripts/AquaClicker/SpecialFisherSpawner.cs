@@ -60,20 +60,42 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private void OnEnable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed += OnSpecialFishDestroyed;
+		SpecialFish.OnSpecialFishCollected += OnRegisterCollectedFish;
 	}
 
 	private void OnDisable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed -= OnSpecialFishDestroyed;
+		SpecialFish.OnSpecialFishCollected -= OnRegisterCollectedFish;
 	}
 
 	private void OnSpecialFishDestroyed()
 	{
 		_specialFishOnScreen = false;
 	}
+
+	private void OnRegisterCollectedFish(SpecialFishType fishType)
+	{
+		switch (fishType)
+		{
+			case SpecialFishType.Bonus:
+				_bonusSpawnedFish++;
+				break;
+			case SpecialFishType.Multiplier:
+				_multiplierSpawnedFish++;
+				break;
+			case SpecialFishType.AutoAgent:
+				_autoAgentSpawnedFish++;
+				break;
+			default:
+				break;
+		}
+	}
 	private void TryBonusFish()
 	{
 		if (_specialFishOnScreen)
+			return;
+		if (AquaController.Instance.IsAnySpecialFishActive)
 			return;
 		if (AquaController.Instance.TotalClicks < _bonusMinClicks)
 			return;
@@ -90,14 +112,14 @@ public class SpecialFisherSpawner : MonoBehaviour
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[0], _spawner.transform, false);
 		SpawnPosition(fishSpawn);
 
-		_bonusSpawnedFish++;
-		_lastBonusSpawnTime = Time.time;
 		_specialFishOnScreen = true;
-
+		_lastBonusSpawnTime = Time.time;
 	}
 	private void TryMultiplierFish()
 	{
-		if (AquaController.Instance.IsMultiplierActive)
+		if (_specialFishOnScreen)
+			return;
+		if (AquaController.Instance.IsAnySpecialFishActive)
 			return;
 		if (AquaController.Instance.TotalClicks < _multiplierMinClicks)
 			return;
@@ -114,14 +136,15 @@ public class SpecialFisherSpawner : MonoBehaviour
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[1], _spawner.transform, false);
 		SpawnPosition(fishSpawn);
 
-		_multiplierSpawnedFish++;
-		_lastMultiplierSpawnTime = Time.time;
 		_specialFishOnScreen = true;
+		_lastMultiplierSpawnTime = Time.time;
 	}
 
 	private void TryAutoAgentFish()
 	{
-		if (AquaController.Instance.IsAutoClickerActive)
+		if (_specialFishOnScreen)
+			return;
+		if (AquaController.Instance.IsAnySpecialFishActive)
 			return;
 		if (AquaController.Instance.TotalClicks < _autoAgentMinClicks)
 			return;
@@ -138,9 +161,8 @@ public class SpecialFisherSpawner : MonoBehaviour
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[2], _spawner.transform, false);
 		SpawnPosition(fishSpawn);
 
-		_autoAgentSpawnedFish++;
-		_lastAutoAgentSpawnTime = Time.time;
 		_specialFishOnScreen = true;
+		_lastAutoAgentSpawnTime = Time.time;
 	}
 
 	private void SpawnPosition(SpecialFish fishSpawn)

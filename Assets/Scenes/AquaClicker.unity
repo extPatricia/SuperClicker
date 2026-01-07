@@ -257,6 +257,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 131237314}
   m_CullTransparentMesh: 1
+--- !u!1 &318982995
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 318982997}
+  - component: {fileID: 318982996}
+  m_Layer: 0
+  m_Name: ClicksManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &318982996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318982995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f2cb8e51230cd64bb4f72153c6bf886, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clicksThresholds: 0000000064000000f4010000e80300008813000010270000
+  _clicksValues: 0100000002000000050000000a0000003200000064000000
+--- !u!4 &318982997
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318982995}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.21459675, z: -1713}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &337625985
 GameObject:
   m_ObjectHideFlags: 0
@@ -5429,7 +5475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 4}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &775733795
@@ -5536,6 +5582,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 220be0ebd7cf2d14e89bc2bd860cccd1, type: 3}
   - {fileID: 21300000, guid: e915170552d00f14aa99eaab5d6fbe8c, type: 3}
   _clickText: {fileID: 131237316}
+  _canvas: {fileID: 547186162}
   _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}
 --- !u!114 &775733799
 MonoBehaviour:
@@ -5607,8 +5654,10 @@ MonoBehaviour:
   _particleRain: {fileID: 1892712345}
   _clickText: {fileID: 5680082568717258582, guid: 5313345664134c5458860bfe68d99aaa, type: 3}
   _rewardText: {fileID: 0}
+  _multiplierUI: {fileID: 1839709138}
   _agentPrefab: {fileID: 7339315467751942764, guid: 224b842169f53ae46aeb3914629e3c06, type: 3}
   _agentTransform: {fileID: 6638911366627822899, guid: 224b842169f53ae46aeb3914629e3c06, type: 3}
+  _autoAgentUI: {fileID: 1839709139}
 --- !u!1 &941463116
 GameObject:
   m_ObjectHideFlags: 0
@@ -5717,7 +5766,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1039}
+  m_AnchoredPosition: {x: 0, y: 1048}
   m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1758890917
@@ -5940,7 +5989,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1038}
+  m_AnchoredPosition: {x: 0, y: 1233}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!199 &1892712344
@@ -6023,7 +6072,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892712342}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 6
   simulationSpeed: 0.7
   stopAction: 0
   cullingMode: 0
@@ -7348,7 +7397,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 1, g: 1, b: 1, a: 0.29411766}
         key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
@@ -7364,7 +7413,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 25250
+        atime0: 0
         atime1: 65535
         atime2: 0
         atime3: 0
@@ -7394,7 +7443,7 @@ ParticleSystem:
         ctime5: 0
         ctime6: 0
         ctime7: 0
-        atime0: 31033
+        atime0: 964
         atime1: 65535
         atime2: 48380
         atime3: 0
@@ -7527,7 +7576,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 829883670, guid: cea11fe055f4e764ebf64391c65feffe, type: 3}
+    - sprite: {fileID: 21300000, guid: 9bf1dcdc3ef03604ba38bbe8cb2255ff, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -10869,6 +10918,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 802353987}
+  - {fileID: 318982997}
   - {fileID: 519420032}
   - {fileID: 2131963728}
   - {fileID: 547186163}

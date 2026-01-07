@@ -17,6 +17,7 @@ public class SpecialFish : MonoBehaviour
 	[field: SerializeField] public SpecialFishType FishType { get; set; }
 
 	public static Action OnAnySpecialFishDestroyed;
+	public static Action<SpecialFishType> OnSpecialFishCollected;
 	#endregion
 
 	#region Fields
@@ -66,6 +67,8 @@ public class SpecialFish : MonoBehaviour
 		ShowAnimation();
 		// Apply reward based on type
 		ApplyReward();
+		// Notify listeners
+		OnSpecialFishCollected?.Invoke(FishType);
 		// Destroy fish
 		Destroy(gameObject);
 	}

@@ -4,6 +4,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.ParticleSystem;
 
 public class AquaController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class AquaController : MonoBehaviour
 	[field: SerializeField] public float CurrentMultiplier { get; set; }
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
 	public bool IsAutoClickerActive => _autoAgentRoutine != null;
+	public bool IsAnySpecialFishActive => IsMultiplierActive || IsAutoClickerActive;
 
 	public int TotalClicks { get; set; }
 
@@ -25,11 +27,17 @@ public class AquaController : MonoBehaviour
 	[SerializeField] private ParticleSystem _particleRain;
 	[SerializeField] private TextMeshProUGUI _clickText;
 	[SerializeField] private TextMeshProUGUI _rewardText;
-	private Coroutine _multiplierRoutine;
-	private Coroutine _autoAgentRoutine;
 
+	[Header("Multiplier")]
+	[SerializeField] private MultiplierUI _multiplierUI;	
+	private Coroutine _multiplierRoutine;
+	
+
+	[Header("Agent Fish")]
 	[SerializeField] private AgentFishVisual _agentPrefab;
 	[SerializeField] private Transform _agentTransform;
+	[SerializeField] private AutoAgentUI _autoAgentUI;
+	private Coroutine _autoAgentRoutine;
 	private AgentFishVisual _agentVisual;
 
 	#endregion
@@ -62,7 +70,7 @@ public class AquaController : MonoBehaviour
 	}
 	public void RainParticles()
 	{
-		_particleRain.Emit(Mathf.Clamp((int)ClickRatio, 0, 13));
+		_particleRain.Emit(Mathf.Clamp((int)ClickRatio, 0, 5));
 	}
 
 	/**
@@ -80,6 +88,9 @@ public class AquaController : MonoBehaviour
 		{
 			StopCoroutine(_multiplierRoutine);
 		}
+
+		CurrentMultiplier = multiplier;
+		_multiplierUI.Initialize(duration);
 		_multiplierRoutine = StartCoroutine(MultiplierTimer(multiplier, duration));
 	}
 	public void ActivateAutoClickerAgent(int clicksPerSecond, float duration)
@@ -95,6 +106,7 @@ public class AquaController : MonoBehaviour
 			_agentVisual.SetTarget(_agentTransform);
 		}
 		
+		_autoAgentUI.Initialize(duration);
 		_autoAgentRoutine = StartCoroutine(AutoClickerAgentTimer(clicksPerSecond, duration));
 	}
 	#endregion
@@ -204,11 +216,20 @@ public class AquaController : MonoBehaviour
 	private void OnEnable()
 	{
 		FishButtonUI.OnSlotReward += GetReward;
+		FishButtonUI.OnChangeParticleSprite += ChangeCanvasParticleSystem;
 	}
 
 	private void OnDisable()
 	{
 		FishButtonUI.OnSlotReward -= GetReward;
+		FishButtonUI.OnChangeParticleSprite -= ChangeCanvasParticleSystem;
+	}
+
+	private void ChangeCanvasParticleSystem(Sprite sprite)
+	{
+		var texture = _particleRain.textureSheetAnimation;
+		texture.enabled = true;
+		texture.SetSprite(0, sprite);
 	}
 
 

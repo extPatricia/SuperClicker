@@ -21,6 +21,7 @@ public class FishButtonUI : MonoBehaviour
 	}
 
 	public static event Action<Reward> OnSlotReward;
+	public static Action<Sprite> OnChangeParticleSprite;
 	#endregion
 
 	#region Fields
@@ -29,6 +30,7 @@ public class FishButtonUI : MonoBehaviour
 	[SerializeField] private ParticleSystem _particles;
 	[SerializeField] private Sprite[] _particleSprites; 
 	[SerializeField] private TextMeshProUGUI _clickText;
+	[SerializeField] private Canvas _canvas;	
 	[Header("Prefab Points")]
 	[SerializeField] private PointsUI _prefabPoint;
 
@@ -53,7 +55,7 @@ public class FishButtonUI : MonoBehaviour
 	#region Public Methods
 	public void Click(int clickCount)
 	{
-		_particles.Emit(Mathf.Clamp(clickCount, 1, 15));
+		_particles.Emit(Mathf.Clamp(clickCount, 1, 3));
 		ClicksLeft -= clickCount;
 		Camera.main.DOShakePosition(Mathf.Clamp(0.1f * clickCount, 0, 2));
 
@@ -61,17 +63,19 @@ public class FishButtonUI : MonoBehaviour
 		int finalClicks = _aquaController.AddClicks(clickCount);
 
 		// Instantiate points UI
-		PointsUI point = Instantiate(_prefabPoint, transform);
-		
-		RectTransform buttonRect = GetComponent<RectTransform>();
-		RectTransform pointRect = point.GetComponent<RectTransform>();
+		PointsUI point = Instantiate(_prefabPoint, _canvas.transform);
 
-		Vector2 randomPos = new Vector2(
-			UnityEngine.Random.Range(-buttonRect.rect.width / 2, buttonRect.rect.width / 2),
-			UnityEngine.Random.Range(-buttonRect.rect.height / 2, buttonRect.rect.height / 2)
+		RectTransform pointRect = point.GetComponent<RectTransform>();
+		RectTransform canvasRect = _canvas.transform as RectTransform;
+
+		RectTransformUtility.ScreenPointToLocalPointInRectangle(
+			canvasRect,
+			Input.mousePosition,
+			_canvas.worldCamera,
+			out Vector2 localPos
 		);
 
-		pointRect.anchoredPosition = randomPos;
+		pointRect.localPosition = localPos;
 		point.SetText("+" + finalClicks.ToString());
 
 		// Particle rain
@@ -120,6 +124,8 @@ public class FishButtonUI : MonoBehaviour
 
 		texture.RemoveSprite(0);
 		texture.AddSprite(_particleSprites[evolutionIndex]);
+
+		OnChangeParticleSprite?.Invoke(_particleSprites[evolutionIndex]);
 	}
 	#endregion	
 

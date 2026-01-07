@@ -15,6 +15,11 @@ public class AutoAgentUI : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public void Initialize(float duration)
+	{
+		gameObject.SetActive(true);
+		 _autoAgentText.text = Mathf.CeilToInt(duration) + "s";
+	}
 	#endregion
 
 	#region Private Methods
@@ -36,13 +41,7 @@ public class AutoAgentUI : MonoBehaviour
 			return;
 		}
 
-		gameObject.SetActive(true);
 		_autoAgentText.text = Mathf.CeilToInt(timeLeft ) + "s";
-
-		if (timeLeft <= 0)
-		{
-			gameObject.SetActive(false);
-		}
 	}
 	#endregion
 
