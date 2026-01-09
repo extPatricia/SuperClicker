@@ -26,7 +26,6 @@ public class AquaController : MonoBehaviour
 	#region Fields
 	[SerializeField] private ParticleSystem _particleRain;
 	[SerializeField] private TextMeshProUGUI _clickText;
-	[SerializeField] private TextMeshProUGUI _rewardText;
 
 	[Header("Multiplier")]
 	[SerializeField] private MultiplierUI _multiplierUI;	
@@ -70,7 +69,7 @@ public class AquaController : MonoBehaviour
 	}
 	public void RainParticles()
 	{
-		_particleRain.Emit(Mathf.Clamp((int)ClickRatio, 0, 5));
+		_particleRain.Emit(Mathf.Clamp((int)ClickRatio, 0, 2));
 	}
 
 	/**
@@ -108,6 +107,37 @@ public class AquaController : MonoBehaviour
 		
 		_autoAgentUI.Initialize(duration);
 		_autoAgentRoutine = StartCoroutine(AutoClickerAgentTimer(clicksPerSecond, duration));
+	}
+
+	/**
+	 *      _   _             _   _    
+	 *     |_) |_ \    / /\  |_) | \ | 
+	 *     | \ |_  \/\/ /--\ | \ |_/ o 
+	 *                                 
+	 */
+	public void ApplyReward(ShopItemData item)
+	{
+		switch (item.RewardType)
+		{
+			case ShopRewardType.Clicker:
+				ClickRatio += item.Clicker;
+				break;
+			case ShopRewardType.Multiplier:
+				CurrentMultiplier *= item.Multiplier;
+				//ActivateMultiplier(item.Multiplier, 30f);
+				break;
+			case ShopRewardType.AutoAgent:
+				//ActivateAutoClickerAgent(Mathf.RoundToInt(item.AutoAgent), 30f);
+				break;
+			default:
+				break;
+		}
+	}
+
+	public void DeductClicks(int amount)
+	{
+		TotalClicks -= amount;
+		OnClicksChanged?.Invoke(TotalClicks);
 	}
 	#endregion
 
@@ -151,77 +181,13 @@ public class AquaController : MonoBehaviour
 		_autoAgentRoutine = null;
 	}
 
-
-
-	/**
-	*       ____    U _____ u                 _       ____     ____    _    
-	*    U |  _"\ u \| ___"|/__        __ U  /"\  uU |  _"\ u |  _"\ U|"|u  
-	*     \| |_) |/  |  _|"  \"\      /"/  \/ _ \/  \| |_) |//| | | |\| |/  
-	*      |  _ <    | |___  /\ \ /\ / /\  / ___ \   |  _ <  U| |_| |\|_|   
-	*      |_| \_\   |_____|U  \ V  V /  U/_/   \_\  |_| \_\  |____/ u(_)   
-	*      //   \\_  <<   >>.-,_\ /\ /_,-. \\    >>  //   \\_  |||_   |||_  
-	*     (__)  (__)(__) (__)\_)-'  '-(_/ (__)  (__)(__)  (__)(__)_) (__)_) 
-	*/
-	private void GetReward(Reward reward)
-	{
-		ShowReward(reward);
-		// Apply reward
-		if (reward.RewardType == RewardType.Plus)
-		{
-			ClickRatio += reward.Value;
-			_clickText.text = "x" + ClickRatio;
-			return;
-		}
-
-		if (reward.RewardType == RewardType.Multi)
-		{
-			ClickRatio *= reward.Value;
-			_clickText.text = "x" + ClickRatio;
-			return;
-		}
-
-		//if (reward.RewardType == RewardType.Agent)
-		//{
-		//	//TODO: Implement agent reward
-		//	Agent newAgent = Instantiate(_agents[(int)reward.Value], transform.position, Quaternion.identity);
-		//	newAgent.destiny = reward.ObjectReward;
-		//	return;
-		//}
-	}
-	private void ShowReward(Reward reward)
-	{
-		// Initialize text
-		if (!_rewardText.gameObject.activeSelf)
-		{
-			_rewardText.gameObject.SetActive(true);
-			_rewardText.transform.localScale = Vector3.zero;
-		}
-
-		// Update text
-		_rewardText.text = "REWARD\n" + reward.RewardType + " " + reward.Value + " clicks";
-
-		// Crear secuencia
-		Sequence mySequence = DOTween.Sequence();
-
-		// Añadir animaciones a la secuencia
-		mySequence.Append(_rewardText.transform.DOScale(1, 1));
-		mySequence.Append(_rewardText.transform.DOShakeRotation(1, new Vector3(0, 0, 30)));
-		mySequence.Append(_rewardText.transform.DOScale(0, 1));
-
-		// Iniciar la secuencia
-		mySequence.Play();
-
-	}
-
 	private void OnEnable()
 	{
-		FishButtonUI.OnSlotReward += GetReward;
 		FishButtonUI.OnChangeParticleSprite += ChangeCanvasParticleSystem;
 	}
 
 	private void OnDisable()
 	{
-		FishButtonUI.OnSlotReward -= GetReward;
 		FishButtonUI.OnChangeParticleSprite -= ChangeCanvasParticleSystem;
 	}
 

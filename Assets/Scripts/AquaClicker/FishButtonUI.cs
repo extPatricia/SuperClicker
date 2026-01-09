@@ -20,7 +20,6 @@ public class FishButtonUI : MonoBehaviour
 		}
 	}
 
-	public static event Action<Reward> OnSlotReward;
 	public static Action<Sprite> OnChangeParticleSprite;
 	#endregion
 
@@ -55,7 +54,8 @@ public class FishButtonUI : MonoBehaviour
 	#region Public Methods
 	public void Click(int clickCount)
 	{
-		_particles.Emit(Mathf.Clamp(clickCount, 1, 3));
+		//_particles.Emit(Mathf.Clamp(clickCount, 1, 3));
+		_particles.Emit(1);
 		ClicksLeft -= clickCount;
 		Camera.main.DOShakePosition(Mathf.Clamp(0.1f * clickCount, 0, 2));
 
