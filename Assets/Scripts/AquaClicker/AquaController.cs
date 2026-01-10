@@ -15,17 +15,17 @@ public class AquaController : MonoBehaviour
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
 	public bool IsAutoClickerActive => _autoAgentRoutine != null;
 	public bool IsAnySpecialFishActive => IsMultiplierActive || IsAutoClickerActive;
-
+	public float ClicksPerSecond => _autoClicksPerSecond;
 	public int TotalClicks { get; set; }
 
 	public static Action<int> OnClicksChanged;
 	public static Action<float, float> OnMultiplierChanged;
 	public static Action<float> OnAutoAgentChanged;
+	public static Action<float> OnClicksPerSecondChanged;
 	#endregion
 
 	#region Fields
 	[SerializeField] private ParticleSystem _particleRain;
-	[SerializeField] private TextMeshProUGUI _clickText;
 
 	[Header("Multiplier")]
 	[SerializeField] private MultiplierUI _multiplierUI;	
@@ -38,6 +38,9 @@ public class AquaController : MonoBehaviour
 	[SerializeField] private AutoAgentUI _autoAgentUI;
 	private Coroutine _autoAgentRoutine;
 	private AgentFishVisual _agentVisual;
+
+
+	private float _autoClicksPerSecond;
 
 	#endregion
 
@@ -124,10 +127,11 @@ public class AquaController : MonoBehaviour
 				break;
 			case ShopRewardType.Multiplier:
 				CurrentMultiplier *= item.Multiplier;
-				//ActivateMultiplier(item.Multiplier, 30f);
 				break;
 			case ShopRewardType.AutoAgent:
-				//ActivateAutoClickerAgent(Mathf.RoundToInt(item.AutoAgent), 30f);
+				_autoClicksPerSecond += item.AgentRate;
+				StartAutoClickerAgent();
+				OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
 				break;
 			default:
 				break;
@@ -196,6 +200,27 @@ public class AquaController : MonoBehaviour
 		var texture = _particleRain.textureSheetAnimation;
 		texture.enabled = true;
 		texture.SetSprite(0, sprite);
+	}
+
+	private void StartAutoClickerAgent()
+	{
+		if (_autoAgentRoutine != null)
+			return;
+
+		_autoAgentRoutine = StartCoroutine(AutoClickerAgent());
+	}
+
+	private IEnumerator AutoClickerAgent()
+	{
+		while (true)
+		{
+			if (_autoClicksPerSecond > 0)
+			{
+				AddClicks(Mathf.RoundToInt(_autoClicksPerSecond));
+			}
+
+			yield return new WaitForSeconds(1f);
+		}
 	}
 
 

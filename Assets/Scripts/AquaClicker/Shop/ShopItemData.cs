@@ -20,7 +20,7 @@ public class ShopItemData : ScriptableObject
 
 	public int Clicker;
 	public float Multiplier;
-	public float AutoAgent;
+	public float AgentRate;
 
 	[HideInInspector] public int PurchasedCount;
 	#endregion

@@ -9,14 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8906cdf6e71738e44a73f2ba5ca00005, type: 3}
-  m_Name: OneClicker
+  m_Script: {fileID: 11500000, guid: acbd03f9eb4b16049bcd162b416ef808, type: 3}
+  m_Name: SpecialFishMultiplier
   m_EditorClassIdentifier: 
-  ItemName: +1 Clicker
-  RewardType: 0
-  BaseCost: 50
-  CostMultiplier: 1.15
-  Clicker: 1
-  Multiplier: 0
-  AutoAgent: 0
-  PurchasedCount: 0
+  Id: special_multiplier
+  Title: Pez especial x2!
+  Type: 8
+  TargetAmount: 0
+  IsCompleted: 1

@@ -5,6 +5,8 @@ public class ShopManager : MonoBehaviour
 {    
     #region Properties
 	public static ShopManager Instance { get; set; }
+
+	public static Action<ShopItemData> OnItemPurchased;
 	#endregion
 
 	#region Fields
@@ -40,8 +42,11 @@ public class ShopManager : MonoBehaviour
 		AquaController.Instance.DeductClicks(cost);
 		itemData.PurchasedCount++;
 
+		OnItemPurchased?.Invoke(itemData);
+		
 		AquaController.Instance.ApplyReward(itemData);
 		return true;
+
 	}
 	#endregion
 
