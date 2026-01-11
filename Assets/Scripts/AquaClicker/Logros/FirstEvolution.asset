@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: first_evolution
   Title: "Primera evoluci\xF3n"
+  Description: Tu pez ha evolucionado por primera vez
   Type: 5
   TargetAmount: 0
   IsCompleted: 1

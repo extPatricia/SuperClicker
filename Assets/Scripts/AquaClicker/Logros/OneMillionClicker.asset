@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: one_million_clicks
   Title: 1 Millon clicks!
+  Description: "Woow! Un mill\xF3n de clicks. Impresionante"
   Type: 2
   TargetAmount: 1000000
   IsCompleted: 0

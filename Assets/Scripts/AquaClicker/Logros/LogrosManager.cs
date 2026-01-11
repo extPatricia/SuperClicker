@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class LogrosManager : MonoBehaviour
+public class LogrosManager : MonoBehaviour, IResettable
 {
 	#region Properties
 	public static LogrosManager Instance;
@@ -21,6 +21,29 @@ public class LogrosManager : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public void ResetData()
+	{
+		for (int i = 0; i < _logrosData.Count; i++)
+		{
+			_logrosData[i].IsCompleted = false;
+		}
+	}
+
+	public void SaveData()
+	{
+		for (int i = 0; i < _logrosData.Count; i++)
+		{
+			PlayerPrefs.SetInt($"LOGRO_{i}_COMPLETED", _logrosData[i].IsCompleted ? 1 : 0);
+		}
+	}
+
+	public void LoadData()
+	{
+		for (int i = 0; i < _logrosData.Count; i++)
+		{
+			_logrosData[i].IsCompleted = PlayerPrefs.GetInt($"LOGRO_{i}_COMPLETED", 0) == 1;
+		}
+	}
 	#endregion
 
 	#region Private Methods
@@ -115,7 +138,7 @@ public class LogrosManager : MonoBehaviour
 	private void CheckLogroCompletion(LogrosData logroData)
 	{
 		logroData.IsCompleted = true;
-		_logrosUI.ShowLogro(logroData.Title);
+		_logrosUI.ShowLogro(logroData.Title, logroData.Description);
 	}
 	#endregion
 

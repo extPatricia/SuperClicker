@@ -22,6 +22,7 @@ public class LogrosData : ScriptableObject
 	#region Properties
 	public string Id;
 	public string Title;
+	public string Description;
 
 	public LogroType Type;
 	public int TargetAmount;

@@ -9,7 +9,8 @@ public class LogrosUI : MonoBehaviour
 	#endregion
 
 	#region Fields
-	[SerializeField] private TextMeshProUGUI _logrosText;
+	[SerializeField] private TextMeshProUGUI _logrosTitle;
+	[SerializeField] private TextMeshProUGUI _logrosDescription;
 	[SerializeField] private CanvasGroup _logrosCanvasGroup;
 	[SerializeField] private float _fadeDuration = 2f;
 
@@ -25,13 +26,14 @@ public class LogrosUI : MonoBehaviour
 	#endregion
 
 	#region Public Methods
-	public void ShowLogro(string logroMessage)
+	public void ShowLogro(string logroTitle, string logroDescription)
 	{
 		_currentTween?.Kill();
 
 		gameObject.SetActive(true);
 
-		_logrosText.text = logroMessage;
+		_logrosTitle.text = logroTitle;
+		_logrosDescription.text = logroDescription;
 		_logrosCanvasGroup.alpha = 0f;
 
 		Sequence sequence = DOTween.Sequence();

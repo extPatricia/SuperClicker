@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: special_multiplier
   Title: Pez especial x2!
+  Description: Durante 60 segundos, tus clicks valen el doble.
   Type: 8
   TargetAmount: 0
   IsCompleted: 1

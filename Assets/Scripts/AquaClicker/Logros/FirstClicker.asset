@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: first_click
   Title: Primer click
+  Description: "Tu aventura acu\xE1tica acaba de comenzar"
   Type: 0
   TargetAmount: 1
   IsCompleted: 0

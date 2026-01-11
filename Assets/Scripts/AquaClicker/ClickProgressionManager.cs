@@ -1,9 +1,10 @@
 using UnityEngine;
 using System;
 
-public class ClickProgressionManager : MonoBehaviour
+public class ClickProgressionManager : MonoBehaviour, IResettable
 {
 	#region Properties
+	public static ClickProgressionManager Instance;
 	#endregion
 
 	#region Fields
@@ -14,9 +15,37 @@ public class ClickProgressionManager : MonoBehaviour
 	#endregion
 
 	#region Unity Callbacks
+	private void Awake()
+	{
+		Instance = this;
+	}
 	#endregion
 
 	#region Public Methods
+	public void ResetData()
+	{
+		_currentLevel = -1;
+		AquaController.Instance.ClickRatio = _clicksValues[0];
+	}
+
+	public void SaveData()
+	{
+		PlayerPrefs.SetInt("CLICK_PROGRESSION_LEVEL", _currentLevel);
+	}
+
+	public void LoadData()
+	{
+		_currentLevel = PlayerPrefs.GetInt("CLICK_PROGRESSION_LEVEL", -1);
+		if (_currentLevel >= 0 && _currentLevel < _clicksValues.Length)
+		{
+			AquaController.Instance.ClickRatio = _clicksValues[_currentLevel];
+		}
+		else
+		{
+			_currentLevel = -1;
+			AquaController.Instance.ClickRatio = _clicksValues[0];
+		}
+	}
 	#endregion
 
 	#region Private Methods

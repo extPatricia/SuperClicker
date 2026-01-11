@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: first_shop
   Title: Primera compra
+  Description: El acuario empieza a mejorar
   Type: 6
   TargetAmount: 0
   IsCompleted: 0

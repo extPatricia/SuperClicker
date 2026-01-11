@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.ParticleSystem;
 
-public class AquaController : MonoBehaviour
+public class AquaController : MonoBehaviour, IResettable
 {
 	#region Properties
 	public static AquaController Instance;
@@ -39,8 +39,12 @@ public class AquaController : MonoBehaviour
 	private Coroutine _autoAgentRoutine;
 	private AgentFishVisual _agentVisual;
 
-
 	private float _autoClicksPerSecond;
+
+	private const string CLICK_KEY = "TOTAL_CLICKS";
+	private const string CLICK_RATIO_KEY = "CLICK_RATIO";
+	private const string MULTIPLIER_KEY = "CURRENT_MULTIPLIER";
+	private const string AUTO_CLICKS_KEY = "AUTO_CLICKS_PER_SECOND";
 
 	#endregion
 
@@ -142,6 +146,45 @@ public class AquaController : MonoBehaviour
 	{
 		TotalClicks -= amount;
 		OnClicksChanged?.Invoke(TotalClicks);
+	}
+
+	public void ResetData()
+	{
+		TotalClicks = 0;
+		ClickRatio = 1f;
+		CurrentMultiplier = 1f;
+		_autoClicksPerSecond = 0f;
+		StopAllCoroutines();
+
+		if (_agentVisual != null)
+		{
+			Destroy(_agentVisual.gameObject);
+			_agentVisual = null;
+		}
+
+		OnClicksChanged?.Invoke(TotalClicks);
+		OnMultiplierChanged?.Invoke(CurrentMultiplier, 0f);
+		OnAutoAgentChanged?.Invoke(0f);
+		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
+	}
+
+	public void SaveData()
+	{
+		PlayerPrefs.SetInt(CLICK_KEY, TotalClicks);
+		PlayerPrefs.SetFloat(CLICK_RATIO_KEY, ClickRatio);
+		PlayerPrefs.SetFloat(MULTIPLIER_KEY, CurrentMultiplier);
+		PlayerPrefs.SetFloat(AUTO_CLICKS_KEY, _autoClicksPerSecond);
+	}
+
+	public void LoadData()
+	{
+		TotalClicks = PlayerPrefs.GetInt(CLICK_KEY, 0);
+		ClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
+		CurrentMultiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
+		_autoClicksPerSecond = PlayerPrefs.GetFloat(AUTO_CLICKS_KEY, 0f);
+		
+		OnClicksChanged?.Invoke(TotalClicks);
+		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
 	}
 	#endregion
 

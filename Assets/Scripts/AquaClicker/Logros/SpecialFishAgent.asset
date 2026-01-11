@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: special_agent
   Title: "Pez especial agente autom\xE1tico"
+  Description: "Alguien m\xE1s est\xE1 clicando por ti\u2026 aprovecha"
   Type: 9
   TargetAmount: 0
   IsCompleted: 1
