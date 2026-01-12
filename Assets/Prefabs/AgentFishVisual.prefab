@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -330, y: 0}
+  m_AnchoredPosition: {x: -280, y: 0}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7339315467751942764
@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _finalOffset: {x: 30, y: 0.3, z: 0}
-  _moveDuration: 4
+  _moveDuration: 3
   _biteDistance: 1.5
-  _biteDuration: 0.3
+  _biteDuration: 0.15
 --- !u!222 &3865833297030295341
 CanvasRenderer:
   m_ObjectHideFlags: 0

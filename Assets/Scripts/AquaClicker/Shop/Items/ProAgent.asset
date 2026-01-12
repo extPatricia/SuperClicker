@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: Pro Agent
   RewardType: 2
-  BaseCost: 6000
+  BaseCost: 30
   CostMultiplier: 1.15
   Clicker: 0
   Multiplier: 0
   AgentRate: 5
-  PurchasedCount: 0
+  PurchasedCount: 1

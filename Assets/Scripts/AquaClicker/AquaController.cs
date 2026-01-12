@@ -72,6 +72,7 @@ public class AquaController : MonoBehaviour, IResettable
 		int finalClicks = Mathf.RoundToInt(clicks * CurrentMultiplier);
 		TotalClicks += finalClicks;
 		OnClicksChanged?.Invoke(TotalClicks);
+		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
 		return finalClicks;
 	}
 	public void RainParticles()
@@ -135,7 +136,7 @@ public class AquaController : MonoBehaviour, IResettable
 			case ShopRewardType.AutoAgent:
 				_autoClicksPerSecond += item.AgentRate;
 				StartAutoClickerAgent();
-				OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
+				
 				break;
 			default:
 				break;
@@ -153,7 +154,7 @@ public class AquaController : MonoBehaviour, IResettable
 		TotalClicks = 0;
 		ClickRatio = 1f;
 		CurrentMultiplier = 1f;
-		_autoClicksPerSecond = 0f;
+		//_autoClicksPerSecond = 0f;
 		StopAllCoroutines();
 
 		if (_agentVisual != null)
@@ -182,7 +183,7 @@ public class AquaController : MonoBehaviour, IResettable
 		ClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
 		CurrentMultiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
 		_autoClicksPerSecond = PlayerPrefs.GetFloat(AUTO_CLICKS_KEY, 0f);
-		
+
 		OnClicksChanged?.Invoke(TotalClicks);
 		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
 	}

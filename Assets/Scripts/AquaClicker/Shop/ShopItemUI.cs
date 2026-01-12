@@ -50,7 +50,7 @@ public class ShopItemUI : MonoBehaviour
 	private void UpdateItemPrice()
 	{
 		_itemNameText.text = _shopItemData.ItemName;
-		_itemPriceText.text = ShopManager.Instance.GetItemCost(_shopItemData).ToString() + "clicks";
+		_itemPriceText.text = ShopManager.Instance.GetItemCost(_shopItemData).ToString() + " clicks";
 
 		UpdateButton(AquaController.Instance.TotalClicks);
 	}

@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <FishType>k__BackingField: 2
   _clickButton: {fileID: 816400152148689074}
-  _value: 10
+  _value: 30
   _duration: 30
   _destroyYPosition: -70
   _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}

@@ -80,12 +80,15 @@ public class SpecialFisherSpawner : MonoBehaviour
 		{
 			case SpecialFishType.Bonus:
 				_bonusSpawnedFish++;
+				Debug.Log($"Bonus Fish Collected. Total: {_bonusSpawnedFish}");
 				break;
 			case SpecialFishType.Multiplier:
 				_multiplierSpawnedFish++;
+				Debug.Log($"Multiplier Fish Collected. Total: {_multiplierSpawnedFish}");
 				break;
 			case SpecialFishType.AutoAgent:
 				_autoAgentSpawnedFish++;
+				Debug.Log($"Auto Agent Fish Collected. Total: {_autoAgentSpawnedFish}");
 				break;
 			default:
 				break;
@@ -142,6 +145,10 @@ public class SpecialFisherSpawner : MonoBehaviour
 
 	private void TryAutoAgentFish()
 	{
+		Debug.Log("Trying to spawn Auto Agent Fish");
+		Debug.Log($"Special Fish On Screen: {_specialFishOnScreen}");
+		Debug.Log($"Is Any Special Fish Active: {AquaController.Instance.IsAnySpecialFishActive}");
+		Debug.Log($"Auto Agent Spawned Fish: {_autoAgentSpawnedFish}");
 		if (_specialFishOnScreen)
 			return;
 		if (AquaController.Instance.IsAnySpecialFishActive)
@@ -158,6 +165,7 @@ public class SpecialFisherSpawner : MonoBehaviour
 
 	private void SpawnAutoAgentFish()
 	{
+		Debug.Log("Spawning Auto Agent Fish");
 		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[2], _spawner.transform, false);
 		SpawnPosition(fishSpawn);
 
