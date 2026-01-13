@@ -12,6 +12,7 @@ public class AquaController : MonoBehaviour, IResettable
 	public static AquaController Instance;
 	[field: SerializeField] public float ClickRatio { get; set; }
 	[field: SerializeField] public float CurrentMultiplier { get; set; }
+	[field: SerializeField] public PoolSystem PoolSystem { get; set; }
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
 	public bool IsAutoClickerActive => _autoAgentRoutine != null;
 	public bool IsAnySpecialFishActive => IsMultiplierActive || IsAutoClickerActive;

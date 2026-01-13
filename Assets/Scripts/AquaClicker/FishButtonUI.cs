@@ -63,7 +63,9 @@ public class FishButtonUI : MonoBehaviour
 		int finalClicks = _aquaController.AddClicks(clickCount);
 
 		// Instantiate points UI
-		PointsUI point = Instantiate(_prefabPoint, _canvas.transform);
+		//PointsUI point = Instantiate(_prefabPoint, _canvas.transform);
+		PointsUI point = _aquaController.PoolSystem.GetPooledObject(_canvas.transform);
+		point.Inizialite();
 
 		RectTransform pointRect = point.GetComponent<RectTransform>();
 		RectTransform canvasRect = _canvas.transform as RectTransform;
