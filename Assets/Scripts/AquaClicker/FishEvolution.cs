@@ -59,7 +59,6 @@ public class FishEvolution : MonoBehaviour
 			OnEvolutionStageChanged?.Invoke(_currentStage);
 			transform.DOScale(1.2f, 0.2f).SetLoops(2, LoopType.Yoyo);
 			_audioSource.PlayOneShot(_evolutionSound);
-			//AudioSource.PlayClipAtPoint(_evolutionSound, Camera.main.transform.position);
 		}
 	}
 

@@ -17,7 +17,7 @@ public class SpecialFish : MonoBehaviour
 	[field: SerializeField] public SpecialFishType FishType { get; set; }
 
 	public static Action OnAnySpecialFishDestroyed;
-	//public static Action<SpecialFishType> OnSpecialFishCollected;
+	public static Action<SpecialFishType> OnSpecialFishCollected;
 
 	[HideInInspector] public int SpawnedCount;
 	#endregion
@@ -89,14 +89,13 @@ public class SpecialFish : MonoBehaviour
 		// Apply reward based on type
 		ApplyReward();
 		// Notify listeners
-		//OnSpecialFishCollected?.Invoke(FishType);
+		OnSpecialFishCollected?.Invoke(FishType);
 		// Destroy fish
 		Destroy(gameObject);
 	}
 	private void ShowAnimation()
 	{
 		_audioSource.PlayOneShot(_soundPoints);
-		//AudioSource.PlayClipAtPoint(_soundPoints, Camera.main.transform.position);
 		PointsUI pointsUI = Instantiate(_prefabPoint, transform.position, Quaternion.identity, transform.parent);
 		
 		switch (FishType)
