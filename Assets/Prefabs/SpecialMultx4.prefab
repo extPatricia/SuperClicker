@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 816400152148689074}
   - component: {fileID: 3410961033495720152}
   m_Layer: 5
-  m_Name: SpecialFishFrenzy
+  m_Name: SpecialMultx4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,10 +52,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b13637a8c20b7b4cb8b0e8de14c36b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <FishType>k__BackingField: 2
+  <FishType>k__BackingField: 1
+  SpawnedCount: 0
   _clickButton: {fileID: 816400152148689074}
-  _value: 30
-  _duration: 30
+  _bonusPercentange: 0.03
+  _minTotalClicks: 250000
+  _maxSpawns: 3
+  _value: 4
+  _duration: 15
   _destroyYPosition: -70
   _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}
   _soundPoints: {fileID: 8300000, guid: 5c967dedc8eddc04facee6b9cb3a81d8, type: 3}
@@ -87,7 +91,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2f5c35780804cf0408a4715a50f7aa57, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d697a9bfc5e77cf429ed0dbbfeb942cf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

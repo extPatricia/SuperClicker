@@ -17,17 +17,24 @@ public class SpecialFish : MonoBehaviour
 	[field: SerializeField] public SpecialFishType FishType { get; set; }
 
 	public static Action OnAnySpecialFishDestroyed;
-	public static Action<SpecialFishType> OnSpecialFishCollected;
+	//public static Action<SpecialFishType> OnSpecialFishCollected;
+
+	[HideInInspector] public int SpawnedCount;
 	#endregion
 
 	#region Fields
 	[SerializeField] private Button _clickButton;
+	[Header("Bonus Fish Settings")]
+	[SerializeField] private float _bonusPercentange = 0.03f;
 	[Header("Values")]
+	[SerializeField] private int _minTotalClicks;
+	[SerializeField] private int _maxSpawns;
 	[SerializeField] private int _value;
 	[SerializeField] private float _duration;
 	[SerializeField] private float _destroyYPosition = -70f;
 	[Header("Prefab Points")]
 	[SerializeField] private PointsUI _prefabPoint;
+	private AudioSource _audioSource;
 	[SerializeField] private AudioClip _soundPoints;
 
 	private AquaController _aquaController;
@@ -39,6 +46,7 @@ public class SpecialFish : MonoBehaviour
 	private void Awake()
 	{
 		_aquaController = FindObjectOfType<AquaController>();
+		_audioSource = Camera.main.GetComponent<AudioSource>();
 	}
 	// Start is called before the first frame update
 	void Start()
@@ -57,6 +65,19 @@ public class SpecialFish : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public bool CanSpawn(int totalClicks)
+	{
+		if (totalClicks < _minTotalClicks)
+			return false;
+		if (SpawnedCount >= _maxSpawns)
+			return false;
+		return true;
+	}
+
+
+	#endregion
+
+	#region Private Methods 
 	private void OnFishClicked()
 	{
 
@@ -68,25 +89,20 @@ public class SpecialFish : MonoBehaviour
 		// Apply reward based on type
 		ApplyReward();
 		// Notify listeners
-		OnSpecialFishCollected?.Invoke(FishType);
+		//OnSpecialFishCollected?.Invoke(FishType);
 		// Destroy fish
 		Destroy(gameObject);
 	}
-
-
-
-	#endregion
-
-	#region Private Methods 
 	private void ShowAnimation()
 	{
-		AudioSource.PlayClipAtPoint(_soundPoints, Camera.main.transform.position);
+		_audioSource.PlayOneShot(_soundPoints);
+		//AudioSource.PlayClipAtPoint(_soundPoints, Camera.main.transform.position);
 		PointsUI pointsUI = Instantiate(_prefabPoint, transform.position, Quaternion.identity, transform.parent);
 		
 		switch (FishType)
 		{
 			case SpecialFishType.Bonus:
-				pointsUI.SetText("+" + _value.ToString());
+				pointsUI.SetText("+BONUS!");
 				break;
 			case SpecialFishType.Multiplier:
 				pointsUI.SetText("x" + _value.ToString());
@@ -109,7 +125,8 @@ public class SpecialFish : MonoBehaviour
 		{
 			case SpecialFishType.Bonus:
 				// Plus clicks
-				_aquaController.AddClicks(_value);
+				int bonus = Mathf.CeilToInt(_aquaController.TotalClicks * _bonusPercentange);
+				_aquaController.AddClicks(bonus);
 				break;
 			case SpecialFishType.Multiplier:
 				// Apply score multiplier

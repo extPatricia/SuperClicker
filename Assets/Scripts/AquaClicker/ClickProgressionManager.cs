@@ -8,8 +8,8 @@ public class ClickProgressionManager : MonoBehaviour, IResettable
 	#endregion
 
 	#region Fields
-	[SerializeField] private int[] _clicksThresholds = { 0, 100, 500, 1000, 5000, 10000 };
-	[SerializeField] private int[] _clicksValues = { 1, 2, 5, 10, 50, 100};
+	[SerializeField] private int[] _clicksThresholds = { 0, 100, 500, 2000, 10000, 50000, 250000, 1500000, 10000000 };
+	[SerializeField] private float[] _clicksValues = { 1f, 1.2f, 1.5f, 2f, 2.5f, 3f, 4f, 5f, 6f};
 
 	private int _currentLevel = -1;
 	#endregion

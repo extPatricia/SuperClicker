@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemName: Basic Agent
   RewardType: 2
-  BaseCost: 3000
+  BaseCost: 25000
   CostMultiplier: 1.15
   Clicker: 0
   Multiplier: 0
-  AutoAgent: 1
+  AgentRate: 1
   PurchasedCount: 0

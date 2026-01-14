@@ -13,6 +13,8 @@ public class FishEvolution : MonoBehaviour
 	[Header("Evolution Stages")]
 	[SerializeField] private Image _fishImage;
 	[SerializeField] private Sprite[] _evolutionStages;
+	[Header("Audio")]
+	[SerializeField] private AudioSource _audioSource;
 	[SerializeField] private AudioClip _evolutionSound;
 
 	private int _currentStage = 0;
@@ -56,17 +58,18 @@ public class FishEvolution : MonoBehaviour
 			_fishImage.sprite = _evolutionStages[_currentStage];
 			OnEvolutionStageChanged?.Invoke(_currentStage);
 			transform.DOScale(1.2f, 0.2f).SetLoops(2, LoopType.Yoyo);
-			AudioSource.PlayClipAtPoint(_evolutionSound, Camera.main.transform.position);
+			_audioSource.PlayOneShot(_evolutionSound);
+			//AudioSource.PlayClipAtPoint(_evolutionSound, Camera.main.transform.position);
 		}
 	}
 
 	private int GetEvolutionIndex(int totalClicks)
 	{
 		if (totalClicks >= 10000000) return 5;
-		if (totalClicks >= 1000000) return 4;
-		if (totalClicks >= 100000) return 3;
-		if (totalClicks >= 10000) return 2;
-		if (totalClicks >= 1000) return 1;
+		if (totalClicks >= 1500000) return 4;
+		if (totalClicks >= 250000) return 3;
+		if (totalClicks >= 50000) return 2;
+		if (totalClicks >= 2000) return 1;
 		return 0;
 	}
 	#endregion

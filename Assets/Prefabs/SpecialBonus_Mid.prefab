@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 816400152148689074}
   - component: {fileID: 3410961033495720152}
   m_Layer: 5
-  m_Name: SpecialFishPlus
+  m_Name: SpecialBonus_Mid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,8 +53,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <FishType>k__BackingField: 0
+  SpawnedCount: 0
   _clickButton: {fileID: 816400152148689074}
-  _value: 1000
+  _bonusPercentange: 0.03
+  _minTotalClicks: 50000
+  _maxSpawns: 5
+  _value: 0
   _duration: 0
   _destroyYPosition: -70
   _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}

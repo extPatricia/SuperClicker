@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using Random = UnityEngine.Random;
+using UnityEngine.Rendering;
 
 public class SpecialFisherSpawner : MonoBehaviour
 {
@@ -12,24 +13,21 @@ public class SpecialFisherSpawner : MonoBehaviour
 	[SerializeField] private Transform _spawner;
 	[SerializeField] private SpecialFish[] _specialFishPrefab;
 
-	[Header("Fish Bonus +1000")]
-	[SerializeField] private int _bonusMinClicks = 100;
-	[SerializeField] private int _bonusMaxSpawns = 5;
+	//[SerializeField] private int _bonusMinClicks = 2000;
+	//[SerializeField] private int _bonusMaxSpawns = 3;
 	[SerializeField] private float _duration = 1f;
 
 	private int _bonusSpawnedFish;
 	private float _lastBonusSpawnTime;
 
-	[Header("Fish Multiplier x4")]
-	[SerializeField] private int _multiplierMinClicks = 1500;
-	[SerializeField] private int _multiplierMaxSpawns = 5;
+	//[SerializeField] private int _multiplierMinClicks = 50000;
+	//[SerializeField] private int _multiplierMaxSpawns = 4;
 
 	private int _multiplierSpawnedFish;
 	private float _lastMultiplierSpawnTime;
 
-	[Header("Fish Auto Agent")]
-	[SerializeField] private int _autoAgentMinClicks = 3000;
-	[SerializeField] private int _autoAgentMaxSpawns = 3;
+	//[SerializeField] private int _autoAgentMinClicks = 250000;
+	//[SerializeField] private int _autoAgentMaxSpawns = 3;
 
 	private int _autoAgentSpawnedFish;
 	private float _lastAutoAgentSpawnTime;
@@ -46,9 +44,10 @@ public class SpecialFisherSpawner : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		TryBonusFish();
-		TryMultiplierFish();
-		TryAutoAgentFish();
+		//TryBonusFish();
+		//TryMultiplierFish();
+		//TryAutoAgentFish();
+		TrySpawnFish();
     }
 
 	#endregion
@@ -60,13 +59,13 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private void OnEnable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed += OnSpecialFishDestroyed;
-		SpecialFish.OnSpecialFishCollected += OnRegisterCollectedFish;
+		//SpecialFish.OnSpecialFishCollected += OnRegisterCollectedFish;
 	}
 
 	private void OnDisable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed -= OnSpecialFishDestroyed;
-		SpecialFish.OnSpecialFishCollected -= OnRegisterCollectedFish;
+		//SpecialFish.OnSpecialFishCollected -= OnRegisterCollectedFish;
 	}
 
 	private void OnSpecialFishDestroyed()
@@ -94,84 +93,106 @@ public class SpecialFisherSpawner : MonoBehaviour
 				break;
 		}
 	}
-	private void TryBonusFish()
-	{
-		if (_specialFishOnScreen)
-			return;
-		if (AquaController.Instance.IsAnySpecialFishActive)
-			return;
-		if (AquaController.Instance.TotalClicks < _bonusMinClicks)
-			return;
-		if (_bonusSpawnedFish >= _bonusMaxSpawns)
-			return;
-		if (Time.time - _lastBonusSpawnTime < _duration)
-			return;
 
-		SpawnBonusFish();
+	private void TrySpawnFish()
+	{
+		// This method can be used to implement a general spawning logic if needed
+		if (_specialFishOnScreen) 
+			return;
+		if (AquaController.Instance.IsAnySpecialFishActive) 
+			return;
+		foreach (SpecialFish fish in _specialFishPrefab)
+		{
+			if (fish.CanSpawn(AquaController.Instance.TotalClicks))
+			{
+				SpawnFish(fish);
+				break;
+			}
+		}
 	}
 
-	private void SpawnBonusFish()
+	private void SpawnFish(SpecialFish fish)
 	{
-		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[0], _spawner.transform, false);
+		SpecialFish fishSpawn = Instantiate(fish, _spawner.transform, false);
 		SpawnPosition(fishSpawn);
-
+		fish.SpawnedCount++;
 		_specialFishOnScreen = true;
-		_lastBonusSpawnTime = Time.time;
 	}
-	private void TryMultiplierFish()
-	{
-		if (_specialFishOnScreen)
-			return;
-		if (AquaController.Instance.IsAnySpecialFishActive)
-			return;
-		if (AquaController.Instance.TotalClicks < _multiplierMinClicks)
-			return;
-		if (_multiplierSpawnedFish >= _multiplierMaxSpawns)
-			return;
-		if (Time.time - _lastMultiplierSpawnTime < _duration)
-			return;
+	//private void TryBonusFish()
+	//{
+	//	if (_specialFishOnScreen)
+	//		return;
+	//	if (AquaController.Instance.IsAnySpecialFishActive)
+	//		return;
 
-		SpawnMultiplierFish();
-	}
+	//	if (AquaController.Instance.TotalClicks < _bonusMinClicks)
+	//		return;
+	//	if (_bonusSpawnedFish >= _bonusMaxSpawns)
+	//		return;
+	//	if (Time.time - _lastBonusSpawnTime < _duration)
+	//		return;
 
-	private void SpawnMultiplierFish()
-	{
-		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[1], _spawner.transform, false);
-		SpawnPosition(fishSpawn);
+	//	SpawnBonusFish();
+	//}
 
-		_specialFishOnScreen = true;
-		_lastMultiplierSpawnTime = Time.time;
-	}
+	//private void SpawnBonusFish()
+	//{
+	//	SpecialFish fishSpawn = Instantiate(_specialFishPrefab[0], _spawner.transform, false);
+	//	SpawnPosition(fishSpawn);
 
-	private void TryAutoAgentFish()
-	{
-		Debug.Log("Trying to spawn Auto Agent Fish");
-		Debug.Log($"Special Fish On Screen: {_specialFishOnScreen}");
-		Debug.Log($"Is Any Special Fish Active: {AquaController.Instance.IsAnySpecialFishActive}");
-		Debug.Log($"Auto Agent Spawned Fish: {_autoAgentSpawnedFish}");
-		if (_specialFishOnScreen)
-			return;
-		if (AquaController.Instance.IsAnySpecialFishActive)
-			return;
-		if (AquaController.Instance.TotalClicks < _autoAgentMinClicks)
-			return;
-		if (_autoAgentSpawnedFish >= _autoAgentMaxSpawns)
-			return;
-		if (Time.time - _lastAutoAgentSpawnTime < _duration)
-			return;
+	//	_specialFishOnScreen = true;
+	//	_lastBonusSpawnTime = Time.time;
+	//}
+	//private void TryMultiplierFish()
+	//{
+	//	if (_specialFishOnScreen)
+	//		return;
+	//	if (AquaController.Instance.IsAnySpecialFishActive)
+	//		return;
+	//	if (AquaController.Instance.TotalClicks < _multiplierMinClicks)
+	//		return;
+	//	if (_multiplierSpawnedFish >= _multiplierMaxSpawns)
+	//		return;
+	//	if (Time.time - _lastMultiplierSpawnTime < _duration)
+	//		return;
 
-		SpawnAutoAgentFish();
-	}
+	//	SpawnMultiplierFish();
+	//}
 
-	private void SpawnAutoAgentFish()
-	{
-		Debug.Log("Spawning Auto Agent Fish");
-		SpecialFish fishSpawn = Instantiate(_specialFishPrefab[2], _spawner.transform, false);
-		SpawnPosition(fishSpawn);
+	//private void SpawnMultiplierFish()
+	//{
+	//	SpecialFish fishSpawn = Instantiate(_specialFishPrefab[1], _spawner.transform, false);
+	//	SpawnPosition(fishSpawn);
 
-		_specialFishOnScreen = true;
-		_lastAutoAgentSpawnTime = Time.time;
-	}
+	//	_specialFishOnScreen = true;
+	//	_lastMultiplierSpawnTime = Time.time;
+	//}
+
+	//private void TryAutoAgentFish()
+	//{
+	//	if (_specialFishOnScreen)
+	//		return;
+	//	if (AquaController.Instance.IsAnySpecialFishActive)
+	//		return;
+	//	if (AquaController.Instance.TotalClicks < _autoAgentMinClicks)
+	//		return;
+	//	if (_autoAgentSpawnedFish >= _autoAgentMaxSpawns)
+	//		return;
+	//	if (Time.time - _lastAutoAgentSpawnTime < _duration)
+	//		return;
+
+	//	SpawnAutoAgentFish();
+	//}
+
+	//private void SpawnAutoAgentFish()
+	//{
+	//	Debug.Log("Spawning Auto Agent Fish");
+	//	SpecialFish fishSpawn = Instantiate(_specialFishPrefab[2], _spawner.transform, false);
+	//	SpawnPosition(fishSpawn);
+
+	//	_specialFishOnScreen = true;
+	//	_lastAutoAgentSpawnTime = Time.time;
+	//}
 
 	private void SpawnPosition(SpecialFish fishSpawn)
 	{

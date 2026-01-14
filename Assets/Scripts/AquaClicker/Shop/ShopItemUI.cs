@@ -14,6 +14,7 @@ public class ShopItemUI : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI _itemNameText;
 	[SerializeField] private TextMeshProUGUI _itemPriceText;
 	[SerializeField] private Button _itemButton;
+	[SerializeField] private AudioSource _audioSource;
 	[SerializeField] private AudioClip _soundBuyItem;
 	[SerializeField] private TextMeshProUGUI _rewardText;
 	#endregion
@@ -24,7 +25,6 @@ public class ShopItemUI : MonoBehaviour
 	#region Public Methods
 	public void BuyItemClicked()
 	{
-		Debug.Log("Clicked Buy Item: " + _shopItemData.ItemName);
 		bool canBuy = ShopManager.Instance.PurchaseItem(_shopItemData);
 	
 		if (canBuy)
@@ -97,7 +97,8 @@ public class ShopItemUI : MonoBehaviour
 	{
 		if (_soundBuyItem != null)
 		{
-			AudioSource.PlayClipAtPoint(_soundBuyItem, Camera.main.transform.position);
+			_audioSource.PlayOneShot(_soundBuyItem);
+			//AudioSource.PlayClipAtPoint(_soundBuyItem, Camera.main.transform.position);
 		}
 	}
 	#endregion
