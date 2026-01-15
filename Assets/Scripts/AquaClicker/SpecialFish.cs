@@ -19,7 +19,6 @@ public class SpecialFish : MonoBehaviour
 	public static Action OnAnySpecialFishDestroyed;
 	public static Action<SpecialFishType> OnSpecialFishCollected;
 
-	[HideInInspector] public int SpawnedCount;
 	#endregion
 
 	#region Fields
@@ -29,7 +28,7 @@ public class SpecialFish : MonoBehaviour
 	[Header("Values")]
 	[SerializeField] private int _minTotalClicks;
 	[SerializeField] private int _maxSpawns;
-	[SerializeField] private int _value;
+	[SerializeField] private float _value;
 	[SerializeField] private float _duration;
 	[SerializeField] private float _destroyYPosition = -70f;
 	[Header("Prefab Points")]
@@ -65,11 +64,11 @@ public class SpecialFish : MonoBehaviour
 	#endregion
 
 	#region Public Methods
-	public bool CanSpawn(int totalClicks)
+	public bool CanSpawn(int totalClicks, int spawnedCount)
 	{
 		if (totalClicks < _minTotalClicks)
 			return false;
-		if (SpawnedCount >= _maxSpawns)
+		if (spawnedCount >= _maxSpawns)
 			return false;
 		return true;
 	}

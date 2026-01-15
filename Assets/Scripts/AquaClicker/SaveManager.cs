@@ -30,6 +30,7 @@ public class SaveManager : MonoBehaviour
 		ShopManager.Instance.SaveData();
 		LogrosManager.Instance.SaveData();
 		ClickProgressionManager.Instance.SaveData();
+		FishEvolution.Instance.SaveData();
 		Debug.Log("Game Saved!");
 	}
 
@@ -39,6 +40,7 @@ public class SaveManager : MonoBehaviour
 		ShopManager.Instance.LoadData();
 		LogrosManager.Instance.LoadData();
 		ClickProgressionManager.Instance.LoadData();
+		FishEvolution.Instance.LoadData();
 		Debug.Log("Game Loaded!");
 	}
 	#endregion

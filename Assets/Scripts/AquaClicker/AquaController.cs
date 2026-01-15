@@ -10,7 +10,9 @@ public class AquaController : MonoBehaviour, IResettable
 {
 	#region Properties
 	public static AquaController Instance;
-	[field: SerializeField] public float ClickRatio { get; set; }
+//	[field: SerializeField] public float ClickRatio { get; set; }
+	[field: SerializeField] public float BaseClickRatio { get; set; } = 1f;
+	public float ClickRatio => BaseClickRatio;
 	[field: SerializeField] public float CurrentMultiplier { get; set; }
 	[field: SerializeField] public PoolSystem PoolSystem { get; set; }
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
@@ -18,6 +20,7 @@ public class AquaController : MonoBehaviour, IResettable
 	public bool IsAnySpecialFishActive => IsMultiplierActive || IsAutoClickerActive;
 	public float ClicksPerSecond => _autoClicksPerSecond;
 	public int TotalClicks { get; set; }
+	public int MaxClicksEver { get; set; }
 
 	public static Action<int> OnClicksChanged;
 	public static Action<float, float> OnMultiplierChanged;
@@ -43,6 +46,7 @@ public class AquaController : MonoBehaviour, IResettable
 	private float _autoClicksPerSecond;
 
 	private const string CLICK_KEY = "TOTAL_CLICKS";
+	private const string MAX_CLICKS_EVER = "MAX_CLICKS_EVER";
 	private const string CLICK_RATIO_KEY = "CLICK_RATIO";
 	private const string MULTIPLIER_KEY = "CURRENT_MULTIPLIER";
 	private const string AUTO_CLICKS_KEY = "AUTO_CLICKS_PER_SECOND";
@@ -68,10 +72,14 @@ public class AquaController : MonoBehaviour, IResettable
 	#endregion
 
 	#region Public Methods
-	public int AddClicks(int clicks)
+	public int AddClicks(float clicks)
 	{
 		int finalClicks = Mathf.RoundToInt(clicks * CurrentMultiplier);
 		TotalClicks += finalClicks;
+
+		if (TotalClicks > MaxClicksEver)
+			MaxClicksEver = TotalClicks;
+
 		OnClicksChanged?.Invoke(TotalClicks);
 		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
 		return finalClicks;
@@ -101,7 +109,7 @@ public class AquaController : MonoBehaviour, IResettable
 		_multiplierUI.Initialize(duration);
 		_multiplierRoutine = StartCoroutine(MultiplierTimer(multiplier, duration));
 	}
-	public void ActivateAutoClickerAgent(int clicksPerSecond, float duration)
+	public void ActivateAutoClickerAgent(float clicksPerSecond, float duration)
 	{
 		if (_autoAgentRoutine != null)
 		{
@@ -129,7 +137,7 @@ public class AquaController : MonoBehaviour, IResettable
 		switch (item.RewardType)
 		{
 			case ShopRewardType.Clicker:
-				ClickRatio += item.Clicker;
+				BaseClickRatio += item.Clicker;
 				break;
 			case ShopRewardType.Multiplier:
 				CurrentMultiplier *= item.Multiplier;
@@ -153,7 +161,7 @@ public class AquaController : MonoBehaviour, IResettable
 	public void ResetData()
 	{
 		TotalClicks = 0;
-		ClickRatio = 1f;
+		BaseClickRatio = 1f;
 		CurrentMultiplier = 1f;
 		//_autoClicksPerSecond = 0f;
 		StopAllCoroutines();
@@ -173,7 +181,8 @@ public class AquaController : MonoBehaviour, IResettable
 	public void SaveData()
 	{
 		PlayerPrefs.SetInt(CLICK_KEY, TotalClicks);
-		PlayerPrefs.SetFloat(CLICK_RATIO_KEY, ClickRatio);
+		PlayerPrefs.SetInt(MAX_CLICKS_EVER, MaxClicksEver);
+		PlayerPrefs.SetFloat(CLICK_RATIO_KEY, BaseClickRatio);
 		PlayerPrefs.SetFloat(MULTIPLIER_KEY, CurrentMultiplier);
 		PlayerPrefs.SetFloat(AUTO_CLICKS_KEY, _autoClicksPerSecond);
 	}
@@ -181,7 +190,8 @@ public class AquaController : MonoBehaviour, IResettable
 	public void LoadData()
 	{
 		TotalClicks = PlayerPrefs.GetInt(CLICK_KEY, 0);
-		ClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
+		MaxClicksEver = PlayerPrefs.GetInt(MAX_CLICKS_EVER, 0);
+		BaseClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
 		CurrentMultiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
 		_autoClicksPerSecond = PlayerPrefs.GetFloat(AUTO_CLICKS_KEY, 0f);
 
@@ -208,7 +218,7 @@ public class AquaController : MonoBehaviour, IResettable
 	}
 
 
-	private IEnumerator AutoClickerAgentTimer(int clicksPerSecond, float duration)
+	private IEnumerator AutoClickerAgentTimer(float clicksPerSecond, float duration)
 	{
 		float timer = duration;
 

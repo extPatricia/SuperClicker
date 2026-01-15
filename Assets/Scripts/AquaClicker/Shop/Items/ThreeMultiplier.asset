@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8906cdf6e71738e44a73f2ba5ca00005, type: 3}
-  m_Name: TwoClicker
+  m_Name: ThreeMultiplier
   m_EditorClassIdentifier: 
-  ItemName: '+2 '
-  RewardType: 0
-  BaseCost: 200
+  ItemName: x3
+  RewardType: 1
+  BaseCost: 500000
   CostMultiplier: 1.15
-  Clicker: 2
-  Multiplier: 0
+  Clicker: 0
+  Multiplier: 1.25
   AgentRate: 0
   PurchasedCount: 0

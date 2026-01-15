@@ -1,22 +1,38 @@
-using UnityEngine;
 using System;
 using System.Collections;
-using Random = UnityEngine.Random;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Rendering;
+using Random = UnityEngine.Random;
 
 public class SpecialFisherSpawner : MonoBehaviour
 {
 	#region Properties
+	public static SpecialFisherSpawner Instance;
 	#endregion
 
 	#region Fields
 	[SerializeField] private Transform _spawner;
 	[SerializeField] private SpecialFish[] _specialFishPrefab;
+	private Dictionary<SpecialFishType, int> _spawnedCounts = new();
 
+	private float _spawnTimer = 60f;
+	private float _lastSpawnTime;
 	private bool _specialFishOnScreen = false;
 	#endregion
 
 	#region Unity Callbacks
+	private void Awake()
+	{
+		Instance = this;
+
+		// Initialize spawned counts
+		foreach (var fish in _specialFishPrefab)
+		{
+			if (!_spawnedCounts.ContainsKey(fish.FishType))
+				_spawnedCounts.Add(fish.FishType, 0);
+		}
+	}
 	// Start is called before the first frame update
 	void Start()
     {
@@ -31,22 +47,48 @@ public class SpecialFisherSpawner : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public void SaveData()
+	{
+		foreach (var fish in _spawnedCounts)
+		{
+			PlayerPrefs.SetInt($"SPECIAL_FISH_{fish.Key}_SPAWNED_COUNT", fish.Value);
+		}
+	}
+
+	public void LoadData()
+	{
+		foreach (var fish in _specialFishPrefab)
+		{
+			int count = PlayerPrefs.GetInt($"SPECIAL_FISH_{fish.FishType}_SPAWNED_COUNT", 0);
+			_spawnedCounts[fish.FishType] = count;
+		}
+	}
 	#endregion
 
 	#region Private Methods
 	private void OnEnable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed += OnSpecialFishDestroyed;
+		SpecialFish.OnSpecialFishCollected += OnSpecialFishCollected;
 	}
 
 	private void OnDisable()
 	{
 		SpecialFish.OnAnySpecialFishDestroyed -= OnSpecialFishDestroyed;
+		SpecialFish.OnSpecialFishCollected -= OnSpecialFishCollected;
 	}
 
 	private void OnSpecialFishDestroyed()
 	{
 		_specialFishOnScreen = false;
+	}
+
+	private void OnSpecialFishCollected(SpecialFishType fishType)
+	{
+		if (_spawnedCounts.ContainsKey(fishType))
+		{
+			_spawnedCounts[fishType]++;
+		}
 	}
 
 	private void TrySpawnFish()
@@ -56,10 +98,16 @@ public class SpecialFisherSpawner : MonoBehaviour
 			return;
 		if (AquaController.Instance.IsAnySpecialFishActive) 
 			return;
+		if (Time.time - _lastSpawnTime < _spawnTimer)
+			return;
+
 		foreach (SpecialFish fish in _specialFishPrefab)
 		{
-			if (fish.CanSpawn(AquaController.Instance.TotalClicks))
+			int spawned = _spawnedCounts[fish.FishType];
+
+			if (fish.CanSpawn(AquaController.Instance.TotalClicks, spawned))
 			{
+				Debug.Log("Spawning special fish: " + fish.FishType);
 				SpawnFish(fish);
 				break;
 			}
@@ -69,8 +117,8 @@ public class SpecialFisherSpawner : MonoBehaviour
 	private void SpawnFish(SpecialFish fish)
 	{
 		SpecialFish fishSpawn = Instantiate(fish, _spawner.transform, false);
+		_lastSpawnTime = Time.time;
 		SpawnPosition(fishSpawn);
-		fish.SpawnedCount++;
 		_specialFishOnScreen = true;
 	}
 

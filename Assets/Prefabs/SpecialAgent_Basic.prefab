@@ -56,7 +56,7 @@ MonoBehaviour:
   SpawnedCount: 0
   _clickButton: {fileID: 816400152148689074}
   _bonusPercentange: 0.03
-  _minTotalClicks: 50000
+  _minTotalClicks: 5000
   _maxSpawns: 3
   _value: 2
   _duration: 20

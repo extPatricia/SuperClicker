@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class FishEvolution : MonoBehaviour
 {
 	#region Properties
+	public static FishEvolution Instance;
 	public static Action<int> OnEvolutionStageChanged;
 	#endregion
 
@@ -21,6 +22,10 @@ public class FishEvolution : MonoBehaviour
 	#endregion
 
 	#region Unity Callbacks
+	private void Awake()
+	{
+		Instance = this;
+	}
 	// Start is called before the first frame update
 	void Start()
     {
@@ -35,6 +40,16 @@ public class FishEvolution : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public void SaveData()
+	{
+		PlayerPrefs.SetInt("FISH_EVOLUTION_STAGE", _currentStage);
+	}
+
+	public void LoadData()
+	{
+		_currentStage = PlayerPrefs.GetInt("FISH_EVOLUTION_STAGE", 0);
+		_fishImage.sprite = _evolutionStages[_currentStage];
+	}
 	#endregion
 
 	#region Private Methods
@@ -48,11 +63,12 @@ public class FishEvolution : MonoBehaviour
 		AquaController.OnClicksChanged -= CheckEvolution;
 	}
 
-	private void CheckEvolution(int totalClicks)
+	private void CheckEvolution(int _)
 	{
-		int newStage = GetEvolutionIndex(totalClicks);
+		int maxClicks = AquaController.Instance.MaxClicksEver;
+		int newStage = GetEvolutionIndex(maxClicks);
 
-		if (newStage != _currentStage && newStage < _evolutionStages.Length)
+		if (newStage > _currentStage && newStage < _evolutionStages.Length)
 		{
 			_currentStage = newStage;
 			_fishImage.sprite = _evolutionStages[_currentStage];

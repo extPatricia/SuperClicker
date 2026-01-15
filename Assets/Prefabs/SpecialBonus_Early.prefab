@@ -53,12 +53,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <FishType>k__BackingField: 0
-  SpawnedCount: 0
   _clickButton: {fileID: 816400152148689074}
   _bonusPercentange: 0.05
-  _minTotalClicks: 2000
-  _maxSpawns: 4
-  _value: 0
+  _minTotalClicks: 600
+  _maxSpawns: 3
+  _value: 0.05
   _duration: 0
   _destroyYPosition: -70
   _prefabPoint: {fileID: 2911353107688475364, guid: 5313345664134c5458860bfe68d99aaa, type: 3}

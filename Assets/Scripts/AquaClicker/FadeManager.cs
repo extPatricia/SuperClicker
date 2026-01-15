@@ -60,7 +60,9 @@ public class FadeManager : MonoBehaviour
 			// Play reset sound
 			AudioSource.PlayClipAtPoint(_resetSound, Camera.main.transform.position);
 			// Vibrate device (if supported)
+#if UNITY_ANDROID || UNITY_IOS
 			Handheld.Vibrate();
+#endif
 			// Show "New Game" text
 			_newGameText.gameObject.SetActive(true);
 			// Play bubble particle effect
@@ -74,7 +76,7 @@ public class FadeManager : MonoBehaviour
 
 
 	}
-	#endregion
+#endregion
 
 	#region Private Methods
 	#endregion
