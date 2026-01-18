@@ -940,7 +940,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 318982995}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f2cb8e51230cd64bb4f72153c6bf886, type: 3}
   m_Name: 
@@ -12903,7 +12903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 212c8033f1a3ae24a8d157cc17fc8486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ClickRatio>k__BackingField: 1
+  <BaseClickRatio>k__BackingField: 1
   <CurrentMultiplier>k__BackingField: 1
   <PoolSystem>k__BackingField: {fileID: 802353989}
   _particleRain: {fileID: 1892712345}

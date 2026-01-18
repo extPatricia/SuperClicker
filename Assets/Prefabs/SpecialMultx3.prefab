@@ -53,10 +53,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <FishType>k__BackingField: 1
-  SpawnedCount: 0
   _clickButton: {fileID: 816400152148689074}
   _bonusPercentange: 0.03
-  _minTotalClicks: 50000
+  _minTotalClicks: 25000
   _maxSpawns: 4
   _value: 3
   _duration: 20
