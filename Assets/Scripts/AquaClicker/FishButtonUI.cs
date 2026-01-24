@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FishButtonUI : MonoBehaviour
+public class FishButtonUI : MonoBehaviour, IResettable
 {
 	#region Properties
 	public int ClicksLeft
@@ -34,7 +34,8 @@ public class FishButtonUI : MonoBehaviour
 	[SerializeField] private PointsUI _prefabPoint;
 
 	private AquaController _aquaController;
-	private int _clicksLeft;	
+	private int _clicksLeft;
+	private Sprite _defaultParticleSprite;
 	#endregion
 
 	#region Unity 
@@ -46,6 +47,12 @@ public class FishButtonUI : MonoBehaviour
 	void Start()
     {
 		Inizialite();
+
+		var texture = _particles.textureSheetAnimation;
+		texture.enabled = true;
+		texture.mode = ParticleSystemAnimationMode.Sprites;
+
+		_defaultParticleSprite = texture.GetSprite(0);
 
 		_clickButton.onClick.AddListener(Click);
 	}
@@ -84,6 +91,16 @@ public class FishButtonUI : MonoBehaviour
 		_aquaController.RainParticles();
 
 	}
+
+	public void ResetData()
+	{
+		var texture = _particles.textureSheetAnimation;
+		texture.enabled = true;
+		texture.mode = ParticleSystemAnimationMode.Sprites;
+
+		texture.SetSprite(0, _defaultParticleSprite);
+	}
+
 	#endregion
 
 	#region Private Methods
@@ -124,8 +141,7 @@ public class FishButtonUI : MonoBehaviour
 		texture.enabled = true;
 		texture.mode = ParticleSystemAnimationMode.Sprites;
 
-		texture.RemoveSprite(0);
-		texture.AddSprite(_particleSprites[evolutionIndex]);
+		texture.SetSprite(0, _particleSprites[evolutionIndex]);
 
 		OnChangeParticleSprite?.Invoke(_particleSprites[evolutionIndex]);
 	}

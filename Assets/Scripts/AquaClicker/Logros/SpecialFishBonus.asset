@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SpecialFishBonus
   m_EditorClassIdentifier: 
   Id: special_bonus
-  Title: Pez especial +1000!
-  Description: "\xA1Boom! 1000 clicks de una sola vez"
+  Title: Pez especial +Bonus!
+  Description: "\xA1Boom! cu\xE1ntos clicks!"
   Type: 7
   TargetAmount: 0
   IsCompleted: 1

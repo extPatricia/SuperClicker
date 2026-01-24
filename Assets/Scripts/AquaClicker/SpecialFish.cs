@@ -125,6 +125,7 @@ public class SpecialFish : MonoBehaviour
 				// Plus clicks
 				int bonus = Mathf.CeilToInt(_aquaController.TotalClicks * _bonusPercentange);
 				_aquaController.AddClicks(bonus);
+				Debug.Log("PEZ BONUS: " + bonus);
 				break;
 			case SpecialFishType.Multiplier:
 				// Apply score multiplier

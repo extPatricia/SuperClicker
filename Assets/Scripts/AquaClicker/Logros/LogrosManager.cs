@@ -103,10 +103,14 @@ public class LogrosManager : MonoBehaviour, IResettable
 	{
 		for (int i = 0; i < _logrosData.Count; i++)
 		{
+			Debug.Log("Logro special fish false");
+
 			if (!_logrosData[i].IsCompleted)
 			{
 				if (_logrosData[i].Type == LogroType.FirstClick && totalClicks >= 1)
 				{
+					Debug.Log("Logro special fish true");
+
 					CheckLogroCompletion(_logrosData[i]);
 				}
 				else if (_logrosData[i].Type == LogroType.MilClicks && totalClicks >= _logrosData[i].TargetAmount)
@@ -123,12 +127,13 @@ public class LogrosManager : MonoBehaviour, IResettable
 
 	private void OnEvolutionChanged(int obj)
 	{
+
 		for (int i = 0; i < _logrosData.Count; i++)
 		{
 			if (!_logrosData[i].IsCompleted)
 			{
 				if (_logrosData[i].Type == LogroType.FirstEvolution)
-				{
+				{	
 					CheckLogroCompletion(_logrosData[i]);
 				}
 			}

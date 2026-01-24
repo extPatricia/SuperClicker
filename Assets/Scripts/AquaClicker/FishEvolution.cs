@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FishEvolution : MonoBehaviour
+public class FishEvolution : MonoBehaviour, IResettable
 {
 	#region Properties
 	public static FishEvolution Instance;
@@ -40,6 +40,11 @@ public class FishEvolution : MonoBehaviour
 	#endregion
 
 	#region Public Methods
+	public void ResetData()
+	{
+		_currentStage = 0;
+		_fishImage.sprite = _evolutionStages[0];
+	}
 	public void SaveData()
 	{
 		PlayerPrefs.SetInt("FISH_EVOLUTION_STAGE", _currentStage);
@@ -63,10 +68,9 @@ public class FishEvolution : MonoBehaviour
 		AquaController.OnClicksChanged -= CheckEvolution;
 	}
 
-	private void CheckEvolution(int _)
+	private void CheckEvolution(int totalclicks)
 	{
-		int maxClicks = AquaController.Instance.MaxClicksEver;
-		int newStage = GetEvolutionIndex(maxClicks);
+		int newStage = GetEvolutionIndex(totalclicks);
 
 		if (newStage > _currentStage && newStage < _evolutionStages.Length)
 		{
@@ -80,16 +84,11 @@ public class FishEvolution : MonoBehaviour
 
 	private int GetEvolutionIndex(int totalClicks)
 	{
-		//if (totalClicks >= 10000000) return 5;
-		//if (totalClicks >= 1500000) return 4;
-		//if (totalClicks >= 250000) return 3;
-		//if (totalClicks >= 50000) return 2;
-		//if (totalClicks >= 2000) return 1;
-		if (totalClicks >= 75000) return 5;
-		if (totalClicks >= 50000) return 4;
-		if (totalClicks >= 2500) return 3;
-		if (totalClicks >= 500) return 2;
-		if (totalClicks >= 200) return 1;
+		if (totalClicks >= 10000000) return 5;
+		if (totalClicks >= 1500000) return 4;
+		if (totalClicks >= 250000) return 3;
+		if (totalClicks >= 50000) return 2;
+		if (totalClicks >= 2000) return 1;
 		return 0;
 	}
 	#endregion

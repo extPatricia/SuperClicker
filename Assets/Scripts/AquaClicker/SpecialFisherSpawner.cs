@@ -16,7 +16,7 @@ public class SpecialFisherSpawner : MonoBehaviour
 	[SerializeField] private SpecialFish[] _specialFishPrefab;
 	private Dictionary<SpecialFishType, int> _spawnedCounts = new();
 
-	private float _spawnTimer = 60f;
+	private float _spawnTimer = 40f;
 	private float _lastSpawnTime;
 	private bool _specialFishOnScreen = false;
 	#endregion

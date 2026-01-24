@@ -30,8 +30,11 @@ public class ShopManager : MonoBehaviour, IResettable
 	#region Public Methods
 	public void ResetData()
 	{
-		foreach (var item in _shopItems)
-			item.PurchasedCount = 0;
+		for (int i = 0; i < _shopItems.Length; i++)
+		{
+			_shopItems[i].PurchasedCount = 0;
+			PlayerPrefs.DeleteKey($"SHOP_ITEM_{i}_PURCHASED_COUNT");
+		}
 	}
 
 	public void SaveData()

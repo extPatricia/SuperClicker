@@ -20,6 +20,11 @@ public class ShopItemUI : MonoBehaviour
 	#endregion
 
 	#region Unity Callbacks
+	private void Awake()
+	{
+		Initialize();
+		
+	}
 	#endregion
 
 	#region Public Methods
@@ -36,9 +41,20 @@ public class ShopItemUI : MonoBehaviour
 	#endregion
 
 	#region Private Methods
+	private void Initialize()
+	{
+		if (ShopManager.Instance == null)
+		{
+			Debug.LogWarning("ShopManager no listo todavía");
+			return;
+		}
+
+		_itemNameText.text = _shopItemData.ItemName;
+		_itemPriceText.text = ShopManager.Instance.GetItemCost(_shopItemData).ToString();
+		UpdateItemPrice();
+	}
 	private void OnEnable()
 	{
-		UpdateItemPrice();
 		AquaController.OnClicksChanged += UpdateButton;
 	}
 
@@ -51,7 +67,6 @@ public class ShopItemUI : MonoBehaviour
 	{
 		_itemNameText.text = _shopItemData.ItemName;
 		_itemPriceText.text = ShopManager.Instance.GetItemCost(_shopItemData).ToString() + " clicks";
-
 		UpdateButton(AquaController.Instance.TotalClicks);
 	}
 

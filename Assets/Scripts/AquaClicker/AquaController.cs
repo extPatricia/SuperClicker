@@ -10,9 +10,7 @@ public class AquaController : MonoBehaviour, IResettable
 {
 	#region Properties
 	public static AquaController Instance;
-//	[field: SerializeField] public float ClickRatio { get; set; }
-	[field: SerializeField] public float BaseClickRatio { get; set; } = 1f;
-	public float ClickRatio => BaseClickRatio;
+	[field: SerializeField] public float ClickRatio { get; set; }
 	[field: SerializeField] public float CurrentMultiplier { get; set; }
 	[field: SerializeField] public PoolSystem PoolSystem { get; set; }
 	public bool IsMultiplierActive => CurrentMultiplier > 1f;
@@ -30,6 +28,7 @@ public class AquaController : MonoBehaviour, IResettable
 
 	#region Fields
 	[SerializeField] private ParticleSystem _particleRain;
+	private Sprite _spriteParticleRain;
 
 	[Header("Multiplier")]
 	[SerializeField] private MultiplierUI _multiplierUI;	
@@ -46,7 +45,6 @@ public class AquaController : MonoBehaviour, IResettable
 	private float _autoClicksPerSecond;
 
 	private const string CLICK_KEY = "TOTAL_CLICKS";
-	private const string MAX_CLICKS_EVER = "MAX_CLICKS_EVER";
 	private const string CLICK_RATIO_KEY = "CLICK_RATIO";
 	private const string MULTIPLIER_KEY = "CURRENT_MULTIPLIER";
 	private const string AUTO_CLICKS_KEY = "AUTO_CLICKS_PER_SECOND";
@@ -61,8 +59,9 @@ public class AquaController : MonoBehaviour, IResettable
 	// Start is called before the first frame update
 	void Start()
     {
-        
-    }
+		var texture = _particleRain.textureSheetAnimation;
+		_spriteParticleRain = texture.GetSprite(0);
+	}
 
     // Update is called once per frame
     void Update()
@@ -76,9 +75,6 @@ public class AquaController : MonoBehaviour, IResettable
 	{
 		int finalClicks = Mathf.RoundToInt(clicks * CurrentMultiplier);
 		TotalClicks += finalClicks;
-
-		if (TotalClicks > MaxClicksEver)
-			MaxClicksEver = TotalClicks;
 
 		OnClicksChanged?.Invoke(TotalClicks);
 		OnClicksPerSecondChanged?.Invoke(_autoClicksPerSecond);
@@ -106,7 +102,7 @@ public class AquaController : MonoBehaviour, IResettable
 		}
 
 		CurrentMultiplier = multiplier;
-		_multiplierUI.Initialize(duration);
+		_multiplierUI.Initialize(multiplier, duration);
 		_multiplierRoutine = StartCoroutine(MultiplierTimer(multiplier, duration));
 	}
 	public void ActivateAutoClickerAgent(float clicksPerSecond, float duration)
@@ -137,15 +133,14 @@ public class AquaController : MonoBehaviour, IResettable
 		switch (item.RewardType)
 		{
 			case ShopRewardType.Clicker:
-				BaseClickRatio += item.Clicker;
+				ClickRatio += item.Clicker;
 				break;
 			case ShopRewardType.Multiplier:
 				CurrentMultiplier *= item.Multiplier;
 				break;
 			case ShopRewardType.AutoAgent:
 				_autoClicksPerSecond += item.AgentRate;
-				StartAutoClickerAgent();
-				
+				StartAutoClickerAgent();				
 				break;
 			default:
 				break;
@@ -161,10 +156,11 @@ public class AquaController : MonoBehaviour, IResettable
 	public void ResetData()
 	{
 		TotalClicks = 0;
-		BaseClickRatio = 1f;
+		ClickRatio = 1f;
 		CurrentMultiplier = 1f;
 		//_autoClicksPerSecond = 0f;
 		StopAllCoroutines();
+		ResetParticleRain();
 
 		if (_agentVisual != null)
 		{
@@ -181,8 +177,7 @@ public class AquaController : MonoBehaviour, IResettable
 	public void SaveData()
 	{
 		PlayerPrefs.SetInt(CLICK_KEY, TotalClicks);
-		PlayerPrefs.SetInt(MAX_CLICKS_EVER, MaxClicksEver);
-		PlayerPrefs.SetFloat(CLICK_RATIO_KEY, BaseClickRatio);
+		PlayerPrefs.SetFloat(CLICK_RATIO_KEY, ClickRatio);
 		PlayerPrefs.SetFloat(MULTIPLIER_KEY, CurrentMultiplier);
 		PlayerPrefs.SetFloat(AUTO_CLICKS_KEY, _autoClicksPerSecond);
 	}
@@ -190,8 +185,7 @@ public class AquaController : MonoBehaviour, IResettable
 	public void LoadData()
 	{
 		TotalClicks = PlayerPrefs.GetInt(CLICK_KEY, 0);
-		MaxClicksEver = PlayerPrefs.GetInt(MAX_CLICKS_EVER, 0);
-		BaseClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
+		ClickRatio = PlayerPrefs.GetFloat(CLICK_RATIO_KEY, 1f);
 		CurrentMultiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
 		_autoClicksPerSecond = PlayerPrefs.GetFloat(AUTO_CLICKS_KEY, 0f);
 
@@ -255,6 +249,13 @@ public class AquaController : MonoBehaviour, IResettable
 		var texture = _particleRain.textureSheetAnimation;
 		texture.enabled = true;
 		texture.SetSprite(0, sprite);
+	}
+
+	private void ResetParticleRain()
+	{
+		var texture = _particleRain.textureSheetAnimation;
+		texture.enabled = true;
+		texture.SetSprite(0, _spriteParticleRain);
 	}
 
 	private void StartAutoClickerAgent()

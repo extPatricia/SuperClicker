@@ -15,10 +15,10 @@ public class MultiplierUI : MonoBehaviour
 	#endregion
 
 	#region Public Methods
-	public void Initialize(float duration)
+	public void Initialize(float multiplier, float duration)
 	{
 		gameObject.SetActive(true);
-		_multiplierText.text = "x4\n" + Mathf.CeilToInt(duration) + "s";
+		_multiplierText.text = "x" + multiplier + "\n" + Mathf.CeilToInt(duration) + "s";
 	}
 	#endregion
 
@@ -35,14 +35,13 @@ public class MultiplierUI : MonoBehaviour
 
 	private void UpdateMultiplierDisplay(float multiplier, float duration)
 	{
-		Debug.Log("Multiplier Updated: " + multiplier + " for " + duration + "s");
 		if (duration <= 0)
 		{
 			gameObject.SetActive(false);
 			return;
 		}
 
-		_multiplierText.text = "x4\n" + Mathf.CeilToInt(duration) + "s";
+		_multiplierText.text = "x" + multiplier + "\n" + Mathf.CeilToInt(duration) + "s";
 
 	}
 	#endregion

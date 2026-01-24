@@ -25,7 +25,7 @@ public class ClickProgressionManager : MonoBehaviour, IResettable
 	public void ResetData()
 	{
 		_currentLevel = -1;
-		AquaController.Instance.BaseClickRatio = _clicksValues[0];
+		AquaController.Instance.ClickRatio = _clicksValues[0];
 	}
 
 	public void SaveData()
@@ -38,12 +38,12 @@ public class ClickProgressionManager : MonoBehaviour, IResettable
 		_currentLevel = PlayerPrefs.GetInt("CLICK_PROGRESSION_LEVEL", -1);
 		if (_currentLevel >= 0 && _currentLevel < _clicksValues.Length)
 		{
-			AquaController.Instance.BaseClickRatio = _clicksValues[_currentLevel];
+			AquaController.Instance.ClickRatio = _clicksValues[_currentLevel];
 		}
 		else
 		{
 			_currentLevel = -1;
-			AquaController.Instance.BaseClickRatio = _clicksValues[0];
+			AquaController.Instance.ClickRatio = _clicksValues[0];
 		}
 	}
 	#endregion
@@ -59,19 +59,18 @@ public class ClickProgressionManager : MonoBehaviour, IResettable
 		AquaController.OnClicksChanged -= OnClickProgression;
 	}
 
-	private void OnClickProgression(int _)
+	private void OnClickProgression(int totalclicks)
 	{
-		int clicksForProgression = AquaController.Instance.MaxClicksEver;
 
 		for (int i = _clicksThresholds.Length - 1; i >= 0; i--)
 		{
-			if (clicksForProgression >= _clicksThresholds[i])
+			if (totalclicks >= _clicksThresholds[i])
 			{
 				
 				if (_currentLevel != i)
 				{
 					_currentLevel = i;
-					AquaController.Instance.BaseClickRatio = _clicksValues[i];
+					AquaController.Instance.ClickRatio = _clicksValues[i];
 				}
 				return;
 			}
