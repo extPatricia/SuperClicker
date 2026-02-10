@@ -6,6 +6,14 @@ Haz clic para conseguir peces, desbloquea evoluciones, activa multiplicadores te
 
 Es un juego para Android, pero también puedes jugar desde la web en el siguiente enlace: https://extpatricia.itch.io/aquaclicker
 
+---
+
+A relaxing clicker game set in the ocean.
+
+Click to collect fish, unlock evolutions, activate temporary multipliers, and catch special fish that grant large rewards. Progress gradually while enjoying soothing visual effects, particles, and aquatic animations.
+
+This is an Android game, but it can also be played on the web at the following link: https://extpatricia.itch.io/aquaclicker
+
 <img width="340" height="588" alt="Captura_7" src="https://github.com/user-attachments/assets/e0f898ee-5309-4774-9c3c-cc8d9dc32403" />
 <img width="336" height="585" alt="Captura_8" src="https://github.com/user-attachments/assets/84244b73-2912-43c6-b47f-694164de3226" />
 <img width="338" height="593" alt="Captura_9" src="https://github.com/user-attachments/assets/d97e567e-7256-4677-a9b5-561c8e065254" />
